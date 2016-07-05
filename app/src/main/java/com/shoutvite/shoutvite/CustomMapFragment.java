@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,9 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
+
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -39,7 +40,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     private final int MY_LOCATION_ACCESS = 0;
     Location lastLocation = null;
     GoogleMap map = null;
-   // MockAPI entries = null;
     int DISTANCE_THRESHOLD = 500000;
     int ZOOM_LEVEL = 15;
     BitmapDescriptor bitmap = null;
@@ -47,10 +47,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedStateInstance){
         super.onCreate(savedStateInstance);
-       // SupportMapFragment mapFrag = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.gmap);
-      //  mapFrag.getMapAsync(this);
-
-
     }
 
     @Override
@@ -92,6 +88,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             initLocation = new LatLng(FIN_LAT, FIN_LON);
             zoom = 4;
         }
+        googleMap.setMyLocationEnabled(true);   //adds the marker for user position
         pos = new CameraPosition(initLocation, zoom, 0, 0);
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
     }

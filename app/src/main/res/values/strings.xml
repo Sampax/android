@@ -4,5 +4,6 @@
     <string name="shout_dialog">Shout shoutvite</string>
     <string name="create_shout_string">Shout</string>
     <string name="cancel">Cancel</string>
+    <string name="facebook_app_id">1745496975712974</string>
 
 </resources>
