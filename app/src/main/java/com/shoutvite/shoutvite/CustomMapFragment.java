@@ -3,6 +3,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,8 +16,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +31,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,6 +48,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     int DISTANCE_THRESHOLD = 500000;
     int ZOOM_LEVEL = 15;
     BitmapDescriptor bitmap = null;
+    Bitmap bmap = null;
+
 
     @Override
     public void onCreate(Bundle savedStateInstance){
@@ -61,15 +68,31 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             view = inflater.inflate(R.layout.map_layout, container, false);
             previousContainer = container;
         }
+        ArrayList<String> shouts = new ArrayList<String>();
+        shouts.add("fug");
+        shouts.add("jees");
+        shouts.add("Android");
+        shouts.add("on");
+        shouts.add("perseestä");
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.gmap);
         mapFragment.getMapAsync(this);
-        Bitmap bmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        bmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
         bmap = Bitmap.createScaledBitmap(bmap, 100, 100, false);        //[TODO]should scale depending on screen size
 
         bitmap = BitmapDescriptorFactory.fromResource(R.drawable.logo);
         bitmap = BitmapDescriptorFactory.fromBitmap(bmap);
-
+        //custom adapter to access textView because android is a piece of shit software that should be exterminated
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.shout, R.id.shout_text, shouts){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView textView = (TextView) super.getView(position, convertView, parent);
+                textView.setBackground(new BitmapDrawable(getResources(), bmap));
+                return textView;
+            }
+        };
+        ListView listView = (ListView)view.findViewById(R.id.map_shout_list);
+        listView.setAdapter(adapter);
         return view;
     }
 
