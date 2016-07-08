@@ -97,9 +97,22 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         };
         ListView listView = (ListView)view.findViewById(R.id.map_shout_list);
         listView.setAdapter(adapter);
+        FrameLayout frame1 = (FrameLayout) view.findViewById(R.id.frame1);
         FrameLayout frame2 = (FrameLayout) view.findViewById(R.id.frame2);
-        frame2.setVisibility(View.GONE);
-       // FrameLayout testi = (FrameLayout)view.findViewById(R.id.frame1);
+        if(frame1.getVisibility() == View.VISIBLE) {
+            frame2.setVisibility(View.GONE);
+        }else{
+            frame2.setVisibility(View.VISIBLE);
+        }
+        ArrayList<String> single_shouts = new ArrayList<String>();
+        single_shouts.add("testi...");
+        single_shouts.add("joo");
+        single_shouts.add("näyttäis");
+        single_shouts.add("toimivan");
+        ArrayAdapter<String> convoAdapter = new ArrayAdapter<String>(getActivity(), R.layout.single_shoutl, R.id.single_shout_text, single_shouts);
+        ListView shoutConvo = (ListView)frame2.findViewById(R.id.shout_convo_list);
+        shoutConvo.setAdapter(convoAdapter);
+        // FrameLayout testi = (FrameLayout)view.findViewById(R.id.frame1);
        // testi.setVisibility(View.GONE);
         return view;
     }
@@ -115,7 +128,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         int zoom = 15;
         int permission = ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION);
         if (initLocation == null) {
-            //new LatLng(70,80)
             initLocation = new LatLng(FIN_LAT, FIN_LON);
             zoom = 4;
         }
@@ -143,7 +155,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                 Log.v("location update", "updated location 2");
                 APIConnector api = ((MainActivity) getActivity()).API;
-//                Log.v("markers", "entryjä" + api.locations.size());
                 List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
                 //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]
                 Log.v("markers", "locations koko: "+ locations.size());

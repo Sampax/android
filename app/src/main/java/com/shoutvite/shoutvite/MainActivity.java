@@ -29,6 +29,7 @@ public class MainActivity extends FragmentActivity {
     FragmentTabHost tabHost;
     int lastTab = 0;
     int currentTab = 0;
+
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
 
     @Override
@@ -64,35 +65,30 @@ public class MainActivity extends FragmentActivity {
 //        AppEventsLogger.activateApp(this);    //depricated
     }
 
-    public void crash(View view){
-        //ShoutDialogFragment.
-    }
-
     public void shoutClicked(View view){
 
         Log.v("clickattu", "jee");
-        ArrayList<String> single_shouts = new ArrayList<String>();
-        single_shouts.add("testi...");
-        single_shouts.add("joo");
-        single_shouts.add("näyttäis");
-        single_shouts.add("toimivan");
-        ArrayAdapter<String> convoAdapter = new ArrayAdapter<String>(this, R.layout.single_shoutl, R.id.single_shout_text);
         View rootView = view.getRootView();
         ((FrameLayout)rootView.findViewById(R.id.frame1)).setVisibility(View.GONE);
         ((FrameLayout)rootView.findViewById(R.id.frame2)).setVisibility(View.VISIBLE);
-        //view.setVisibility(View.INVISIBLE);
+
 
     }
 
-    //adds shout to db
     public void postShout(String shoutContent) {
-        Log.v("postattu", shoutContent);
+        Log.v("postattuuu", shoutContent);
     }
 
     @Override
     public void onBackPressed(){
+        //TODO: currently only handles fragments, not overlapping views
         if(tabQueue.size() > 0) {
-            tabHost.setCurrentTab(tabQueue.get(tabQueue.size()-1));
+            int tabIndex = tabQueue.get(tabQueue.size()-1);
+            if(tabIndex < 0){
+                //for overlapping views
+            }else {
+                tabHost.setCurrentTab(tabIndex);
+            }
             tabQueue.remove(tabQueue.size()-1);
             if(tabQueue.size() > 0) {       //just in case
                 tabQueue.remove(tabQueue.size() - 1);      //second time because onTabChanged launches also on onBackPressed
