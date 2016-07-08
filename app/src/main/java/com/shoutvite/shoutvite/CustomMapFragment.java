@@ -17,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -74,6 +76,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         shouts.add("Android");
         shouts.add("on");
         shouts.add("perseestä");
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.gmap);
         mapFragment.getMapAsync(this);
@@ -93,6 +97,10 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         };
         ListView listView = (ListView)view.findViewById(R.id.map_shout_list);
         listView.setAdapter(adapter);
+        FrameLayout frame2 = (FrameLayout) view.findViewById(R.id.frame2);
+        frame2.setVisibility(View.GONE);
+       // FrameLayout testi = (FrameLayout)view.findViewById(R.id.frame1);
+       // testi.setVisibility(View.GONE);
         return view;
     }
 
