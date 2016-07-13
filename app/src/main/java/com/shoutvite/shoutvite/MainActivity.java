@@ -56,10 +56,6 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
-
-
-
-
         //These two lines would activate gathering user data (for example demographics
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);    //depricated
@@ -78,6 +74,7 @@ public class MainActivity extends FragmentActivity {
     public void postShout(String shoutContent) {
         Log.v("postattuuu", shoutContent);
     }
+
 
     @Override
     public void onBackPressed(){
@@ -98,3 +95,6 @@ public class MainActivity extends FragmentActivity {
         }
     }
 }
+
+
+

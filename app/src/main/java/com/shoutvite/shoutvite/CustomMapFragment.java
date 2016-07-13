@@ -131,10 +131,14 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             initLocation = new LatLng(FIN_LAT, FIN_LON);
             zoom = 4;
         }
-        googleMap.setMyLocationEnabled(true);   //adds the marker for user position
+        //TODO: crashes if there's not yet permission to use location information, move elsewhere or check for permission
+        if(googleMap != null) {
+            googleMap.setMyLocationEnabled(true);   //adds the marker for user position
+        }
         pos = new CameraPosition(initLocation, zoom, 0, 0);
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
     }
+
     public LatLng getInitialLocation() {
         double lat = 0;
         double lon = 0;
@@ -249,6 +253,13 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         switch(requestCode) {//TODO: actually handle both cases
             case MY_LOCATION_ACCESS:
                 Log.d("location", "lupa saatu");
+                if(map != null) {
+                    try {
+                        map.setMyLocationEnabled(true);
+                    }catch(SecurityException e){
+                        Log.v("permission error", "no permission yet"); //should never occur
+                    }
+                }
             default:
                 Log.d("location", "lupa evätty");
 
