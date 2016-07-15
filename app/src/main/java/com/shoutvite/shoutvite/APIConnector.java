@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface APIConnector {
 
-    public boolean pushShout(Location location, String shout);
+    public Shout pushShout(Shout shout);
+    public boolean updateShout(int id, Location location, String shout, String creator, String moderator);
     public List<Location> getNearbyShouts(Location location, double threshold);
+    public Shout getShout(int id);
+    public List<Shout> getShouts(Location location, int threshold);
+    public boolean destroyShout(int id);
+
 }

@@ -38,11 +38,21 @@ public class MockAPI implements APIConnector {
         }
     }
 
-    @Override
+
     public boolean pushShout(Location location, String shout) {
         locations.add(location);
         messages.add(shout);
         return true;
+    }
+
+    @Override
+    public Shout pushShout(Shout shout) {
+        return null;
+    }
+
+    @Override
+    public boolean updateShout(int id, Location location, String shout, String creator, String moderator) {
+        return false;
     }
 
     @Override
@@ -55,5 +65,20 @@ public class MockAPI implements APIConnector {
             }
         }
         return nbLocations;
+    }
+
+    @Override
+    public Shout getShout(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Shout> getShouts(Location location, int threshold) {
+        return null;
+    }
+
+    @Override
+    public boolean destroyShout(int id) {
+        return false;
     }
 }
