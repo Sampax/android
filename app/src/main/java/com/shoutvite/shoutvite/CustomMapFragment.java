@@ -159,16 +159,16 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                 Log.v("location update", "updated location 2");
                 APIConnector api = ((MainActivity) getActivity()).API;
-                List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
+              //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
                 //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]
-                Log.v("markers", "locations koko: "+ locations.size());
-                for(int i = 0; i < locations.size(); i++){
-                    Location aux = locations.get(i);
+           //     Log.v("markers", "locations koko: "+ locations.size());
+           //     for(int i = 0; i < locations.size(); i++){
+           //         Location aux = locations.get(i);
 
 
-                   map.addMarker(new MarkerOptions().position(new LatLng(aux.getLatitude(), aux.getLongitude())).icon(bitmap)); //adds these eeeeevery time
-                    Log.v("markers", "added " + i);
-                }
+         //          map.addMarker(new MarkerOptions().position(new LatLng(aux.getLatitude(), aux.getLongitude())).icon(bitmap)); //adds these eeeeevery time
+           //         Log.v("markers", "added " + i);
+            //    }
             }
 
             @Override

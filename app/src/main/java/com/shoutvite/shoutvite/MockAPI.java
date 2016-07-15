@@ -51,20 +51,20 @@ public class MockAPI implements APIConnector {
     }
 
     @Override
-    public boolean updateShout(int id, Location location, String shout, String creator, String moderator) {
+    public boolean updateShout(int id, double lat, double lon, String shout, String creator, String moderator) {
         return false;
     }
 
-    @Override
-    public List<Location> getNearbyShouts(Location location, double distThreshold){
+    public List<Location> getNearbyShouts(double lat, double lon, double distThreshold){
         List<Location> nbLocations = new ArrayList<Location>();
         for(int i = 0; i < locations.size(); i++){
-            if(location.distanceTo(locations.get(i)) < distThreshold){
-                nbLocations.add(locations.get(i));
-
+    //        if(location.distanceTo(locations.get(i)) < distThreshold){
+   //             nbLocations.add(locations.get(i));
+//
             }
-        }
-        return nbLocations;
+      //  }
+ //       return nbLocations;
+    return null;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class MockAPI implements APIConnector {
     }
 
     @Override
-    public List<Shout> getShouts(Location location, int threshold) {
+    public List<Shout> getShouts(double lat, double lon, int threshold) {
         return null;
     }
 
@@ -81,4 +81,10 @@ public class MockAPI implements APIConnector {
     public boolean destroyShout(int id) {
         return false;
     }
+
+    @Override
+    public User createUser(String name, String email, String password) {
+        return null;
+    }
+
 }

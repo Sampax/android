@@ -4,6 +4,9 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -18,15 +21,10 @@ import java.util.List;
 /**
  * Created by Jonatan on 13.7.2016.
  */
-public class RailsAPI extends AsyncTask<Object, Object, Object> implements APIConnector {
+public class RailsAPI extends AsyncTask<Object, Void, Object> implements APIConnector {
 
     String API_URL = "http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
     String actual_API_URL = "http://api.shoutvite.com/v1/";
-
-    //for example:
-    // http://api.shoutvite.dev/v1/shouts?lat=10&lon=10
-
-    //http://stackoverflow.com/questions/9767952/how-to-add-parameters-to-httpurlconnection-using-post
 
     public String readHttpResponse(HttpURLConnection connection) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
@@ -61,6 +59,7 @@ public class RailsAPI extends AsyncTask<Object, Object, Object> implements APICo
             if (connection.getResponseCode() == 200) {
                 return readHttpResponse(connection);
             } else {
+                Log.v("POST response code", ""+ connection.getResponseCode());
                 return null;
             }
         } catch (Exception e) {
@@ -81,12 +80,12 @@ public class RailsAPI extends AsyncTask<Object, Object, Object> implements APICo
         try {
             URL url = new URL(APIURL);
             connection = (HttpURLConnection) url.openConnection();
-            InputStreamReader inReader = new InputStreamReader(connection.getInputStream());
-            int data = inReader.read();
+            InputStreamReader reader = new InputStreamReader(connection.getInputStream());
+            int data = reader.read();
             String message = "";
             while (data != -1) {
                 char letter = (char) data;
-                data = inReader.read();
+                data = reader.read();
                 message = message + letter;
             }
             return message;
@@ -109,14 +108,10 @@ public class RailsAPI extends AsyncTask<Object, Object, Object> implements APICo
     }
 
     @Override
-    public boolean updateShout(int id, Location location, String shout, String creator, String moderator) {
+    public boolean updateShout(int id, double lat, double lon, String shout, String creator, String moderator) {
         return false;
     }
 
-    @Override
-    public List<Location> getNearbyShouts(Location location, double threshold) {
-        return null;
-    }
 
     @Override
     public Shout getShout(int id) {
@@ -124,7 +119,16 @@ public class RailsAPI extends AsyncTask<Object, Object, Object> implements APICo
     }
 
     @Override
-    public List<Shout> getShouts(Location location, int threshold) {
+    public List<Shout> getShouts(double lat, double lon, int threshold) {
+        String response = GET(actual_API_URL + "shouts?lon=" + lat + "&lat=" + lon + "&radius=" + threshold);
+        try {
+            JSONObject JSONResponse = new JSONObject(response);
+            JSONArray shouts = JSONResponse.getJSONArray("shouts");
+            Log.v("shout array size", ""+ shouts.length());
+
+        }catch(Exception e){
+            Log.v("JSON", "Something wrong with JSON");
+        }
         return null;
     }
 
@@ -134,28 +138,37 @@ public class RailsAPI extends AsyncTask<Object, Object, Object> implements APICo
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
+    public User createUser(String name, String email, String password) {
+        JSONObject user = new JSONObject();
         try {
-            JSONObject user = new JSONObject();
-            user.put("username", "Derpington");
-            user.put("email", "derp@derp5.com");
-            user.put("password", "asdfgh");
+            user.put("username", name);
+            user.put("email", email);
+            user.put("password", password);
             String url = actual_API_URL + "users";
             String response = POST(user, url);
-            Log.v("POST response", response);
+//            Log.v("POST response", response);
             JSONObject JResponse = new JSONObject(response);
             String authToken = JResponse.getString("auth_token");
             Log.v("auth token", authToken);
+            User newUser = new User(email, name, authToken, password);
+            return newUser;
+        }catch(Exception e){
+            Log.v("JSON", "JSON error" + e.toString());
+            return null;
 
-            url = actual_API_URL + "shouts?" + "lat=10&lon=10";
-            response = GET(url);
-            Log.v("GET response", response);
+        }
+    }
+
+    @Override
+    protected Object doInBackground(Object[] objects) {
+        try {
+            List<Shout> shouts = getShouts(10, 10, 550);
+            User user = createUser("Derpington", "derp@derpmail222222.com", "salasana");
 
         } catch (Exception e) {
             //TODO: some sensible way of handling Exceptions
-            Log.v("voimuna", e.toString());
+            Log.v("voi muna", e.toString());
         }
         return null;
     }
-
 }

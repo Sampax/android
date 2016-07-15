@@ -12,10 +12,10 @@ import java.util.List;
 public interface APIConnector {
 
     public Shout pushShout(Shout shout);
-    public boolean updateShout(int id, Location location, String shout, String creator, String moderator);
-    public List<Location> getNearbyShouts(Location location, double threshold);
+    public boolean updateShout(int id, double lat, double lon, String shout, String creator, String moderator);
     public Shout getShout(int id);
-    public List<Shout> getShouts(Location location, int threshold);
+    public List<Shout> getShouts(double lat, double lon, int threshold);
     public boolean destroyShout(int id);
+    public User createUser(String name, String email, String password);
 
 }
