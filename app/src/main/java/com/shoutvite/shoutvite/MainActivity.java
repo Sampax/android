@@ -56,7 +56,9 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
-        new RailsAPI().execute(new Object());
+        AsyncTaskPayload payload = new AsyncTaskPayload();
+
+        new RailsAPI().execute(payload);
         //These two lines would activate gathering user data (for example demographics
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);    //depricated

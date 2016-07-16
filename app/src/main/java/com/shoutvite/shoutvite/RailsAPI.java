@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by Jonatan on 13.7.2016.
  */
-public class RailsAPI extends AsyncTask<Object, Void, Object> implements APIConnector {
+public class RailsAPI extends AsyncTask<Object, Void, Object>{
 
     String API_URL = "http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
     String actual_API_URL = "http://api.shoutvite.com/v1/";
@@ -102,23 +102,32 @@ public class RailsAPI extends AsyncTask<Object, Void, Object> implements APIConn
     }
 
 
-    @Override
-    public Shout pushShout(Shout shout) {
+    public Shout pushShout(Shout shout, User user) {
+        double lat = shout.getLocation().getLatitude();
+        double lon = shout.getLocation().getLongitude();
+        try {
+            JSONObject query = new JSONObject();
+            query.put("name", shout.getContent());
+            query.put("lat", lat);
+            query.put("lat", lon);
+            query.put("creator", shout.getCreator());
+            String url = actual_API_URL + "shouts";
+            String response = POST(query, url);
+        }catch(Exception e){
+            Log.v("error", e.toString());
+        }
         return null;
     }
 
-    @Override
     public boolean updateShout(int id, double lat, double lon, String shout, String creator, String moderator) {
         return false;
     }
 
 
-    @Override
     public Shout getShout(int id) {
         return null;
     }
 
-    @Override
     public List<Shout> getShouts(double lat, double lon, int threshold) {
         String response = GET(actual_API_URL + "shouts?lon=" + lat + "&lat=" + lon + "&radius=" + threshold);
         try {
@@ -132,12 +141,10 @@ public class RailsAPI extends AsyncTask<Object, Void, Object> implements APIConn
         return null;
     }
 
-    @Override
     public boolean destroyShout(int id) {
         return false;
     }
 
-    @Override
     public User createUser(String name, String email, String password) {
         JSONObject user = new JSONObject();
         try {
@@ -161,14 +168,16 @@ public class RailsAPI extends AsyncTask<Object, Void, Object> implements APIConn
 
     @Override
     protected Object doInBackground(Object[] objects) {
+        AsyncTaskPayload payload = (AsyncTaskPayload)objects[0];
         try {
             List<Shout> shouts = getShouts(10, 10, 550);
-            User user = createUser("Derpington", "derp@derpmail222222.com", "salasana");
+            User user = createUser("Derpington", "derp@derpmail22222222.com", "salasana");
 
         } catch (Exception e) {
             //TODO: some sensible way of handling Exceptions
             Log.v("voi muna", e.toString());
         }
-        return null;
+
+        return objects;
     }
 }
