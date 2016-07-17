@@ -3,6 +3,7 @@ package com.shoutvite.shoutvite;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,13 +24,13 @@ import com.google.android.gms.maps.MapFragment;
 import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity {
-    APIConnector API;
+    RailsAPI API;
     Location lastLocation;
     CallbackManager callbackManager;    //should not be here but for now, convenience
     FragmentTabHost tabHost;
     int lastTab = 0;
     int currentTab = 0;
-
+    CustomMapFragment mapFrag;
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
 
     @Override
@@ -42,7 +43,7 @@ public class MainActivity extends FragmentActivity {
         tabHost = (FragmentTabHost) findViewById(R.id.tabHost);
         tabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
         tabHost.addTab(tabHost.newTabSpec("tab 1").setIndicator("eka"), PlaceholderTabFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec("tab 2").setIndicator("toka"), CustomMapFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("map frag").setIndicator("toka"), CustomMapFragment.class, null);
         //[TODO: different sizes for different devices]:
       //  ImageView logoView = (ImageView) findViewById(R.id.placeholder_logo);
         View logoView = LayoutInflater.from(this).inflate(R.layout.logo_view, null);
@@ -56,9 +57,8 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
-        AsyncTaskPayload payload = new AsyncTaskPayload();
-
-        new RailsAPI().execute(payload);
+     //   mapFrag = (CustomMapFragment) getSupportFragmentManager().findFragmentBy;
+     //   mapFrag.updateShoutsOnMap(null);
         //These two lines would activate gathering user data (for example demographics
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);    //depricated
@@ -74,8 +74,17 @@ public class MainActivity extends FragmentActivity {
 
     }
 
-    public void postShout(String shoutContent) {
+    public void testShoutButton(String shoutContent) {
         Log.v("postattuuu", shoutContent);
+    }
+
+
+    public double getLat(){
+        return lastLocation.getLatitude();
+    }
+
+    public double getLon(){
+        return lastLocation.getLongitude();
     }
 
 

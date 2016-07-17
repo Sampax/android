@@ -14,17 +14,26 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Jonatan on 13.7.2016.
  */
-public class RailsAPI extends AsyncTask<Object, Void, Object>{
+public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload>{
 
+
+    WeakReference<MainActivity> mainRef;    //to access UI from this non-UI thread
     String API_URL = "http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
     String actual_API_URL = "http://api.shoutvite.com/v1/";
+
+
+    public RailsAPI(MainActivity main){
+        mainRef = new WeakReference<MainActivity>(main);
+    }
 
     public String readHttpResponse(HttpURLConnection connection) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
@@ -103,14 +112,14 @@ public class RailsAPI extends AsyncTask<Object, Void, Object>{
 
 
     public Shout pushShout(Shout shout, User user) {
-        double lat = shout.getLocation().getLatitude();
-        double lon = shout.getLocation().getLongitude();
+        double lat = shout.getLat();
+        double lon = shout.getLon();
         try {
             JSONObject query = new JSONObject();
             query.put("name", shout.getContent());
             query.put("lat", lat);
             query.put("lat", lon);
-            query.put("creator", shout.getCreator());
+            query.put("creator", shout.getOwner());
             String url = actual_API_URL + "shouts";
             String response = POST(query, url);
         }catch(Exception e){
@@ -130,15 +139,29 @@ public class RailsAPI extends AsyncTask<Object, Void, Object>{
 
     public List<Shout> getShouts(double lat, double lon, int threshold) {
         String response = GET(actual_API_URL + "shouts?lon=" + lat + "&lat=" + lon + "&radius=" + threshold);
+        Log.v("json fields: ", response);
+        List<Shout> shoutList = new ArrayList<Shout>();
         try {
             JSONObject JSONResponse = new JSONObject(response);
             JSONArray shouts = JSONResponse.getJSONArray("shouts");
-            Log.v("shout array size", ""+ shouts.length());
+            for(int i = 0; i < shouts.length(); i++){
+                JSONObject jsonShout = shouts.getJSONObject(i);
+                int id = jsonShout.getInt("id");
+                String name = jsonShout.getString("name");
+                String channel = jsonShout.getString("channel");
+                String owner = jsonShout.getString("owner");
+                jsonShout = jsonShout.getJSONObject("coords");
+                double latitude = jsonShout.getDouble("latitude");
+                double longitude = jsonShout.getDouble("longitude");
+                shoutList.add(new Shout(id, name, channel, owner, latitude, longitude));
+               // jsonShout.
+            }
+            Log.v("shout array size", ""+ shoutList.size());
 
         }catch(Exception e){
             Log.v("JSON", "Something wrong with JSON");
         }
-        return null;
+        return shoutList;
     }
 
     public boolean destroyShout(int id) {
@@ -167,17 +190,87 @@ public class RailsAPI extends AsyncTask<Object, Void, Object>{
     }
 
     @Override
-    protected Object doInBackground(Object[] objects) {
-        AsyncTaskPayload payload = (AsyncTaskPayload)objects[0];
+    protected AsyncTaskPayload doInBackground(AsyncTaskPayload[] payloads) {
+        AsyncTaskPayload payload = (AsyncTaskPayload)payloads[0];
+        if(payload == null){
+            Log.v("aiempi fug", "fugfug");
+        }
+        User user = payload.user;
+        Shout shout = payload.shout;
+        double lat = payload.lat;
+        double lon = payload.lon;
+        int radius = payload.radius;
+        int id = payload.id;
+        switch (payload.task){
+            case AsyncTaskPayload.CREATE_USER:
+                payload.user = createUser(user.getNick(), user.getEmail(), user.getPassword());
+                Log.v("WTFException createuser", "should not come here from updating location");
+                break;
+            case AsyncTaskPayload.PUSH_SHOUT:
+                payload.shout = pushShout(shout, user);
+                Log.v("WTFException pushshout", "should not come here from updating location");
+                break;
+            case AsyncTaskPayload.GET_SHOUTS:
+                payload.shoutList = getShouts(lat, lon, radius);
+
+                break;
+            case AsyncTaskPayload.GET_SINGLE_SHOUT: //not implemented yet
+                payload.shout = getShout(id);
+                Log.v("WTFException", "should not come here from updating location");
+                break;
+            case AsyncTaskPayload.UPDATE_SHOUT:
+                Log.v("WTFException", "should not come here from updating location");
+                break;
+            case AsyncTaskPayload.DESTROY_SHOUT:
+                Log.v("WTFException", "should not come here from updating location");
+                break;
+            default:
+                Log.v("WTFException", "seriously wtf?");
+                Log.v("WTFException", "should not come here from updating location");
+                break;
+
+        }
         try {
-            List<Shout> shouts = getShouts(10, 10, 550);
-            User user = createUser("Derpington", "derp@derpmail22222222.com", "salasana");
+    //        List<Shout> shouts = getShouts(10, 10, 550);
+    //        user = createUser("Derpington", "derp@derpmail22222222.com", "salasana");
 
         } catch (Exception e) {
             //TODO: some sensible way of handling Exceptions
             Log.v("voi muna", e.toString());
         }
 
-        return objects;
+        return payload;
+    }
+
+    @Override
+    public void onPostExecute(AsyncTaskPayload payload){
+        if(payload == null){
+            Log.v("fug", "fug");
+        }
+        switch (payload.task) {
+            case AsyncTaskPayload.CREATE_USER:
+                Log.v("not yet implemented", "fully");
+                break;
+            case AsyncTaskPayload.PUSH_SHOUT:
+                Log.v("not yet implemented", "fully");
+                break;
+            case AsyncTaskPayload.GET_SHOUTS:
+
+                mainRef.get().mapFrag.updateShoutsOnMap(payload.shoutList);
+                break;
+            case AsyncTaskPayload.GET_SINGLE_SHOUT: //not implemented yet
+                Log.v("not yet implemented", "");
+                break;
+            case AsyncTaskPayload.UPDATE_SHOUT:
+                Log.v("not yet implemented", "");
+                break;
+            case AsyncTaskPayload.DESTROY_SHOUT:
+                Log.v("not yet implemented", "");
+                break;
+            default:
+                Log.v("WTFException", "seriously wtf?");
+                break;
+        }
+
     }
 }

@@ -22,8 +22,15 @@ public class ShoutDialogFragment extends DialogFragment {
         builder.setPositiveButton(getString(R.string.create_shout_string), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                EditText shout = (EditText)((AlertDialog) dialog).findViewById(R.id.newshout);
-                ((MainActivity)getActivity()).postShout(shout.getText().toString());
+                MainActivity main = (MainActivity)getActivity();
+                EditText shoutText = (EditText)((AlertDialog) dialog).findViewById(R.id.newshout);
+                double lat = main.getLat();
+                double lon = main.getLon();
+                Shout shout = new Shout(shoutText.getText().toString(), lat, lon);
+                AsyncTaskPayload payload;
+                payload = AsyncTaskPayload.createShoutPayload(shout);
+                new RailsAPI(main).execute(payload);
+                main.testShoutButton(shoutText.getText().toString());
             }
         });
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

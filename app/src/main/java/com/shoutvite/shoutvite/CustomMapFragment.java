@@ -47,15 +47,20 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     private final int MY_LOCATION_ACCESS = 0;
     Location lastLocation = null;
     GoogleMap map = null;
-    int DISTANCE_THRESHOLD = 500000;
+    int DISTANCE_THRESHOLD = 5000000;
     int ZOOM_LEVEL = 15;
     BitmapDescriptor bitmap = null;
     Bitmap bmap = null;
+    MainActivity main;
 
 
     @Override
     public void onCreate(Bundle savedStateInstance){
         super.onCreate(savedStateInstance);
+        main = (MainActivity)getActivity();
+        main.mapFrag = this;   //to get a handle for this fragment, holy shit the hardest thing ever
+//        ((MainActivity)getActivity()).mapFrag.updateShoutsOnMap(null);
+
     }
 
     @Override
@@ -76,7 +81,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         shouts.add("Android");
         shouts.add("on");
         shouts.add("perseestä");
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.gmap);
@@ -149,16 +153,23 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onLocationChanged(Location location) {
                 lastLocation = location;
+                double lat = location.getLatitude();
+                double lon = location.getLongitude();
                 //TODO: crashes when re-launching the app (at least after modifications, apparently pointer to activity is null
-                ((MainActivity)getActivity()).API = new MockAPI(location);
+//                ((MainActivity)getActivity()).API = new MockAPI(location);
                 //TODO: check if safe, also consider refactoring location elsewhere (myLocation class?):
-                ((MainActivity)getActivity()).lastLocation = location;
+                if(main == null){
+                    Log.v("fug", "nöy");
+                }
+                main.lastLocation = location;
 
-                LatLng latlon = new LatLng(location.getLatitude(), location.getLongitude());
+                LatLng latlon = new LatLng(lat, lon);
                 CameraPosition pos = new CameraPosition(latlon, ZOOM_LEVEL, 0,0);
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                 Log.v("location update", "updated location 2");
-                APIConnector api = ((MainActivity) getActivity()).API;
+                AsyncTaskPayload payload = AsyncTaskPayload.getShoutsPayload(lat, lon, DISTANCE_THRESHOLD);
+                new RailsAPI(main).execute(payload);
+ //               APIConnector api = ((MainActivity) getActivity()).API;
               //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
                 //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]
            //     Log.v("markers", "locations koko: "+ locations.size());
@@ -246,6 +257,26 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         lat = loc.getLatitude();
         return new LatLng(lat, lon);
     }
+
+    public void updateShoutsOnMap(List<Shout> shouts){
+        Log.v("jeeeeeeeeeeeeeeee", "toimii");
+        for(int i = 0; i < shouts.size(); i++){
+            Shout aux = shouts.get(i);
+            map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap));        }
+        //               APIConnector api = ((MainActivity) getActivity()).API;
+        //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
+        //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]
+        //     Log.v("markers", "locations koko: "+ locations.size());
+        //     for(int i = 0; i < locations.size(); i++){
+        //         Location aux = locations.get(i);
+
+
+        //          map.addMarker(new MarkerOptions().position(new LatLng(aux.getLatitude(), aux.getLongitude())).icon(bitmap)); //adds these eeeeevery time
+        //         Log.v("markers", "added " + i);
+        //    }
+
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

@@ -27,7 +27,7 @@ public class AsyncTaskPayload {
     public int radius;
     public int id;
 
-    public AsyncTaskPayload createShoutPayload(Shout shout, User user){
+    public static AsyncTaskPayload createShoutPayload(Shout shout, User user){
         AsyncTaskPayload payload = new AsyncTaskPayload();
         payload.task = PUSH_SHOUT;
         payload.user = user;
@@ -35,7 +35,14 @@ public class AsyncTaskPayload {
         return payload;
     }
 
-    public AsyncTaskPayload getShoutsPayload(double lat, double lon, int radius){
+    public static AsyncTaskPayload createShoutPayload(Shout shout){
+        AsyncTaskPayload payload = new AsyncTaskPayload();
+        payload.task = PUSH_SHOUT;
+        payload.shout = shout;
+        return payload;
+    }
+
+    public static AsyncTaskPayload getShoutsPayload(double lat, double lon, int radius){
         AsyncTaskPayload payload = new AsyncTaskPayload();
         payload.task = GET_SHOUTS;
         payload.lat = lat;
@@ -44,7 +51,7 @@ public class AsyncTaskPayload {
         return payload;
     }
 
-    public AsyncTaskPayload createUserPayload(User user){
+    public static AsyncTaskPayload createUserPayload(User user){
         AsyncTaskPayload payload = new AsyncTaskPayload();
         payload.task = CREATE_USER;
         payload.user = user;
