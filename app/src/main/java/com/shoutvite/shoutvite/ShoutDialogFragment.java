@@ -28,7 +28,7 @@ public class ShoutDialogFragment extends DialogFragment {
                 double lon = main.getLon();
                 Shout shout = new Shout(shoutText.getText().toString(), lat, lon);
                 AsyncTaskPayload payload;
-                payload = AsyncTaskPayload.createShoutPayload(shout);
+                payload = AsyncTaskPayload.createShoutPayload(shout, main.user);
                 new RailsAPI(main).execute(payload);
                 main.testShoutButton(shoutText.getText().toString());
             }

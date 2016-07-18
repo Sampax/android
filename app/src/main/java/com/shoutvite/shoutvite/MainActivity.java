@@ -32,6 +32,7 @@ public class MainActivity extends FragmentActivity {
     int currentTab = 0;
     CustomMapFragment mapFrag;
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MainActivity extends FragmentActivity {
         tabHost.addTab(tabHost.newTabSpec("tab 1").setIndicator("eka"), PlaceholderTabFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("map frag").setIndicator("toka"), CustomMapFragment.class, null);
         //[TODO: different sizes for different devices]:
-      //  ImageView logoView = (ImageView) findViewById(R.id.placeholder_logo);
+        //  ImageView logoView = (ImageView) findViewById(R.id.placeholder_logo);
         View logoView = LayoutInflater.from(this).inflate(R.layout.logo_view, null);
         tabHost.addTab(tabHost.newTabSpec("tab 3").setIndicator(logoView), DialogLaunchFragment.class, null);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -57,21 +58,23 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
-     //   mapFrag = (CustomMapFragment) getSupportFragmentManager().findFragmentBy;
-     //   mapFrag.updateShoutsOnMap(null);
+
+        //   mapFrag = (CustomMapFragment) getSupportFragmentManager().findFragmentBy;
+        //   mapFrag.updateShoutsOnMap(null);
         //These two lines would activate gathering user data (for example demographics
 //        FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);    //depricated
     }
 
-    public void shoutClicked(View view){
+    public void shoutClicked(View view) {
+        User user = new User("jorma2@jormail.com", "unf", null, "salasana");
+        AsyncTaskPayload payload = AsyncTaskPayload.createUserPayload(user);
+        new RailsAPI(this).execute(payload);
 
         Log.v("clickattu", "jee");
         View rootView = view.getRootView();
-        ((FrameLayout)rootView.findViewById(R.id.frame1)).setVisibility(View.GONE);
-        ((FrameLayout)rootView.findViewById(R.id.frame2)).setVisibility(View.VISIBLE);
-
-
+        ((FrameLayout) rootView.findViewById(R.id.frame1)).setVisibility(View.GONE);
+        ((FrameLayout) rootView.findViewById(R.id.frame2)).setVisibility(View.VISIBLE);
     }
 
     public void testShoutButton(String shoutContent) {
@@ -79,32 +82,37 @@ public class MainActivity extends FragmentActivity {
     }
 
 
-    public double getLat(){
+    public double getLat() {
         return lastLocation.getLatitude();
     }
 
-    public double getLon(){
+    public double getLon() {
         return lastLocation.getLongitude();
     }
 
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         //TODO: currently only handles fragments, not overlapping views
-        if(tabQueue.size() > 0) {
-            int tabIndex = tabQueue.get(tabQueue.size()-1);
-            if(tabIndex < 0){
+        if (tabQueue.size() > 0) {
+            int tabIndex = tabQueue.get(tabQueue.size() - 1);
+            if (tabIndex < 0) {
                 //for overlapping views
-            }else {
+            } else {
                 tabHost.setCurrentTab(tabIndex);
             }
-            tabQueue.remove(tabQueue.size()-1);
-            if(tabQueue.size() > 0) {       //just in case
+            tabQueue.remove(tabQueue.size() - 1);
+            if (tabQueue.size() > 0) {       //just in case
                 tabQueue.remove(tabQueue.size() - 1);      //second time because onTabChanged launches also on onBackPressed
             }
-        }else{
+        } else {
             this.finish();
         }
+    }
+
+    public void setUser(User newUser) {
+        user = newUser;
+        Log.v("uusi käyttäjä:", user.getAuthToken());
     }
 }
 

@@ -169,6 +169,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 Log.v("location update", "updated location 2");
                 AsyncTaskPayload payload = AsyncTaskPayload.getShoutsPayload(lat, lon, DISTANCE_THRESHOLD);
                 new RailsAPI(main).execute(payload);
+
  //               APIConnector api = ((MainActivity) getActivity()).API;
               //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
                 //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]

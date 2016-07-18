@@ -11,8 +11,8 @@ public class User {
     //TODO: I repeat, not the way
 
 
-    public User(String em, String name, String auth, String psw){
-        setEmail(em);
+    public User(String mail, String name, String auth, String psw){
+        setEmail(mail);
         setNick(name);
         setAuthToken(auth);
         setPassword(psw);

@@ -84,6 +84,44 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         return null;
     }
 
+    public String POST(JSONObject json, String APIURL, String authToken) {
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(APIURL);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("Authorization", authToken);
+            connection.setRequestMethod("POST");
+            connection.setDoOutput(true); //makes it do POST
+            connection.setDoInput(true);
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
+            connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            OutputStream os = connection.getOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(os, "UTF-8");
+            writer.write(json.toString());
+            writer.flush();
+            writer.close();
+            os.close();
+            if (connection.getResponseCode() == 200) {
+                return readHttpResponse(connection);
+            } else {
+                Log.v("POST response code", ""+ connection.getResponseCode());
+                return null;
+            }
+        } catch (Exception e) {
+            Log.v("POST error", e.toString());
+        }finally{
+            if(connection != null){
+                connection.disconnect();
+            }else{
+                Log.v("POST connection", "already closed");
+            }
+        }
+
+        return null;
+    }
+
+
     public String GET(String APIURL) {
         HttpURLConnection connection = null;
         try {
@@ -121,7 +159,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             query.put("lat", lon);
             query.put("creator", shout.getOwner());
             String url = actual_API_URL + "shouts";
-            String response = POST(query, url);
+            String response = POST(query, url, user.getAuthToken());
         }catch(Exception e){
             Log.v("error", e.toString());
         }
@@ -180,7 +218,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             JSONObject JResponse = new JSONObject(response);
             String authToken = JResponse.getString("auth_token");
             Log.v("auth token", authToken);
-            User newUser = new User(email, name, authToken, password);
+            User newUser = new User(email, name, authToken, null);
             return newUser;
         }catch(Exception e){
             Log.v("JSON", "JSON error" + e.toString());
@@ -249,7 +287,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         }
         switch (payload.task) {
             case AsyncTaskPayload.CREATE_USER:
-                Log.v("not yet implemented", "fully");
+                mainRef.get().setUser(payload.user);
                 break;
             case AsyncTaskPayload.PUSH_SHOUT:
                 Log.v("not yet implemented", "fully");
