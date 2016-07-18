@@ -3,15 +3,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/launch_button"
+    <EditText
+        android:id="@+id/newuser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/shout_dialog"/>
+        android:hint="type username"
+        android:inputType="textMultiLine"
+        android:gravity="top|left"
+        android:lines="1"
+        android:background="@android:color/transparent"
+        />
 
-    <Button
-        android:id="@+id/username_launch_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/create_user_string"/>
 </LinearLayout>

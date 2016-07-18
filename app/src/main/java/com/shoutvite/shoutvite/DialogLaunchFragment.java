@@ -30,6 +30,17 @@ public class DialogLaunchFragment extends Fragment {
 
             }
         });
+        Button createUserButton = (Button) view.findViewById(R.id.username_launch_button);
+        createUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Button button = (Button) v.findViewById(R.id.launch_button);
+                //button.setText("jee");
+                CreateUserDialogFragment newUserDialog = new CreateUserDialogFragment();
+                newUserDialog.show(getActivity().getSupportFragmentManager(), "username dialog");
+
+            }
+        });
         return view;
     }
 

@@ -3,6 +3,7 @@
     <string name="placeholder_content_string">Placeholder</string>
     <string name="shout_dialog">Shout shoutvite</string>
     <string name="create_shout_string">Shout</string>
+    <string name="create_user_string">Create user</string>
     <string name="cancel">Cancel</string>
     <string name="facebook_app_id">1745496975712974</string>
 
