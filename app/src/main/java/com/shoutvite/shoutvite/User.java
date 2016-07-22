@@ -18,6 +18,12 @@ public class User {
         setPassword(psw);
     }
 
+    public User(String mail, String name, String auth){
+        setEmail(mail);
+        setNick(name);
+        setAuthToken(auth);
+    }
+
     public String getEmail() {
         return email;
     }

@@ -52,7 +52,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     BitmapDescriptor bitmap = null;
     Bitmap bmap = null;
     MainActivity main;
-
+    List<String> shouts;
+    ArrayAdapter<String> shoutAdapter;
 
     @Override
     public void onCreate(Bundle savedStateInstance){
@@ -75,12 +76,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             view = inflater.inflate(R.layout.map_layout, container, false);
             previousContainer = container;
         }
-        ArrayList<String> shouts = new ArrayList<String>();
-        shouts.add("fug");
-        shouts.add("jees");
-        shouts.add("Android");
-        shouts.add("on");
-        shouts.add("perseestä");
+        shouts = new ArrayList<String>();
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.gmap);
@@ -91,7 +87,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         bitmap = BitmapDescriptorFactory.fromResource(R.drawable.logo);
         bitmap = BitmapDescriptorFactory.fromBitmap(bmap);
         //custom adapter to access textView because android is a piece of shit software that should be exterminated
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.shout, R.id.shout_text, shouts){
+        shoutAdapter = new ArrayAdapter<String>(getActivity(), R.layout.shout, R.id.shout_text, shouts){
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 TextView textView = (TextView) super.getView(position, convertView, parent);
@@ -100,7 +96,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             }
         };
         ListView listView = (ListView)view.findViewById(R.id.map_shout_list);
-        listView.setAdapter(adapter);
+        listView.setAdapter(shoutAdapter);
         FrameLayout frame1 = (FrameLayout) view.findViewById(R.id.frame1);
         FrameLayout frame2 = (FrameLayout) view.findViewById(R.id.frame2);
         if(frame1.getVisibility() == View.VISIBLE) {
@@ -244,7 +240,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             for(int i = 0; i < providers.size(); i++){  //takes only the first that works, could search for better
                 loc = locationManager.getLastKnownLocation(providers.get(i));
                 if(loc != null){
-                    Log.v("works", "yay");
+                    Log.v("works", "yaaaay");
                     break;
                 }
             }
@@ -259,11 +255,15 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         return new LatLng(lat, lon);
     }
 
-    public void updateShoutsOnMap(List<Shout> shouts){
-        Log.v("jeeeeeeeeeeeeeeee", "toimii");
-        for(int i = 0; i < shouts.size(); i++){
-            Shout aux = shouts.get(i);
-            map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap));        }
+    public void updateShoutsOnMap(List<Shout> shoutList){
+        Log.v("jeeeeeeeeeeeeeeeeee", "toimii");
+        shouts.clear();
+        for(int i = 0; i < shoutList.size(); i++){
+            Shout aux = shoutList.get(i);
+            map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap));
+            shouts.add(aux.getContent());
+        }
+        shoutAdapter.notifyDataSetChanged();
         //               APIConnector api = ((MainActivity) getActivity()).API;
         //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
         //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]

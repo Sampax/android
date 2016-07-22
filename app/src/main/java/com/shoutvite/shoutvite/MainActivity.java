@@ -43,12 +43,12 @@ public class MainActivity extends FragmentActivity {
         // tabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams(width,height));
         tabHost = (FragmentTabHost) findViewById(R.id.tabHost);
         tabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
-        tabHost.addTab(tabHost.newTabSpec("tab 1").setIndicator("eka"), PlaceholderTabFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec("map frag").setIndicator("toka"), CustomMapFragment.class, null);
+//        tabHost.addTab(tabHost.newTabSpec("tab 1").setIndicator("eka"), PlaceholderTabFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("map frag").setIndicator("Map"), CustomMapFragment.class, null);
         //[TODO: different sizes for different devices]:
         //  ImageView logoView = (ImageView) findViewById(R.id.placeholder_logo);
         View logoView = LayoutInflater.from(this).inflate(R.layout.logo_view, null);
-        tabHost.addTab(tabHost.newTabSpec("tab 3").setIndicator(logoView), DialogLaunchFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator(logoView), DialogLaunchFragment.class, null);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
@@ -67,14 +67,10 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void shoutClicked(View view) {
-        User user = new User("jorma2@jormail.com", "unf", null, "salasana");
-        AsyncTaskPayload payload = AsyncTaskPayload.createUserPayload(user);
-        new RailsAPI(this).execute(payload);
-
         Log.v("clickattu", "jee");
         View rootView = view.getRootView();
-        ((FrameLayout) rootView.findViewById(R.id.frame1)).setVisibility(View.GONE);
-        ((FrameLayout) rootView.findViewById(R.id.frame2)).setVisibility(View.VISIBLE);
+  //      ((FrameLayout) rootView.findViewById(R.id.frame1)).setVisibility(View.GONE);
+  //      ((FrameLayout) rootView.findViewById(R.id.frame2)).setVisibility(View.VISIBLE);
     }
 
     public void testShoutButton(String shoutContent) {

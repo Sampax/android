@@ -6,9 +6,12 @@ package com.shoutvite.shoutvite;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.SharedPreferencesCompat;
 import android.view.LayoutInflater;
 import android.widget.EditText;
 
@@ -42,5 +45,23 @@ public class CreateUserDialogFragment extends DialogFragment {
             }
         });
         return builder.create();
+    }
+
+    //these used if login saved
+    public void saveUser(User user){
+        SharedPreferences settings = main.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("username", user.getNick());
+        editor.putString("email", user.getEmail());
+        editor.putString("auth", user.getAuthToken());
+    }
+
+    public User getSavedUser(){
+        SharedPreferences settings = main.getPreferences(Context.MODE_PRIVATE);
+        User user = new User(settings.getString("email", null), settings.getString("username", null), settings.getString("auth", null));
+        if(user.getAuthToken() == null | user.getNick() == null){
+            return null;
+        }
+        return user;
     }
 }
