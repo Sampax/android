@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+
 /**
  * Created by Lauri on 6/21/2016.
  */
@@ -41,6 +43,13 @@ public class DialogLaunchFragment extends Fragment {
 
             }
         });
+        FrameLayout generalFrame = (FrameLayout) view.findViewById(R.id.generalFrame);
+        FrameLayout shoutFrame = (FrameLayout) view.findViewById(R.id.shoutFrame);
+        if(generalFrame.getVisibility() == View.VISIBLE) {
+            shoutFrame.setVisibility(View.GONE);
+        }else{
+            shoutFrame.setVisibility(View.VISIBLE);
+        }
         return view;
     }
 

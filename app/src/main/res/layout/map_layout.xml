@@ -1,48 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:id="@+id/frame"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/frame1"
-        >
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/map">
-
-    <fragment
-        android:id="@+id/gmap"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1500"></fragment>
+        android:layout_height="match_parent">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <fragment
+                android:id="@+id/gmap"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1500"></fragment>
 
 
-    <ListView
-        android:id="@+id/map_shout_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3500"></ListView>
-</LinearLayout>
+            <ListView
+                android:id="@+id/map_shout_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3500"></ListView>
+        </LinearLayout>
     </FrameLayout>
+
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/frame2"
-        >
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <Button
                 android:id="@+id/jeeejee"
-                android:text="jeeeeee"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="jeeeeee" />
 
             <ListView
                 android:id="@+id/shout_convo_list"
