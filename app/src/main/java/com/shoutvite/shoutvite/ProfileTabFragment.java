@@ -78,13 +78,14 @@ public class ProfileTabFragment extends Fragment {
             public void onClick(View v) {
                 //Button button = (Button) v.findViewById(R.id.launch_button);
                 //button.setText("jee");
+                Log.v("paina", "nappulaa");
                 CreateUserDialogFragment newUserDialog = new CreateUserDialogFragment();
                 newUserDialog.show(getActivity().getSupportFragmentManager(), "username dialog");
 
             }
         });
         Button customLoginButton = (Button) view.findViewById(R.id.custom_login_button);
-        createUserButton.setOnClickListener(new View.OnClickListener() {
+        customLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Button button = (Button) v.findViewById(R.id.launch_button);
@@ -94,9 +95,12 @@ public class ProfileTabFragment extends Fragment {
 
             }
         });
+
         if(main.user != null) {
             TextView textView = (TextView) view.findViewById(R.id.teksti);
             textView.setText(main.user.getNick() + "\n" + main.user.getEmail());
+            createUserButton.setVisibility(View.GONE);
+            customLoginButton.setText("Log  out");
         }
         return view;
     }
