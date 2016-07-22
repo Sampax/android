@@ -94,7 +94,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         ArrayList<String> single_shouts = new ArrayList<String>();
         single_shouts.add("testi...");
         single_shouts.add("joo");
-        single_shouts.add("näyttäis");
+        single_shouts.add("näyttäilknkns");
         single_shouts.add("toimivan");
         ArrayAdapter<String> convoAdapter = new ArrayAdapter<String>(getActivity(), R.layout.single_shoutl, R.id.single_shout_text, single_shouts);
         ListView shoutConvo = (ListView)frame2.findViewById(R.id.shout_convo_list);

@@ -227,6 +227,28 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         }
     }
 
+    public User login(String name, String email, String password){
+        JSONObject user = new JSONObject();
+        try {
+            user.put("email", email);
+            user.put("password", password);
+            String url = actual_API_URL + "login";
+            String response = POST(user, url);
+//            Log.v("POST response", response);
+            JSONObject JResponse = new JSONObject(response);
+            Log.v("login response: ", JResponse.toString());
+            String authToken = JResponse.getString("auth_token");
+            Log.v("auth token", authToken);
+            User newUser = new User(email, name, authToken, null);
+            return newUser;
+        }catch(Exception e){
+            Log.v("JSON", "JSON error" + e.toString());
+            return null;
+
+        }
+
+    }
+
     @Override
     protected AsyncTaskPayload doInBackground(AsyncTaskPayload[] payloads) {
         AsyncTaskPayload payload = (AsyncTaskPayload)payloads[0];
@@ -260,6 +282,10 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("WTFException", "should not come here from updating location");
                 break;
             case AsyncTaskPayload.DESTROY_SHOUT:
+                Log.v("WTFException", "should not come here from updating location");
+                break;
+            case AsyncTaskPayload.LOGIN:
+                payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
                 Log.v("WTFException", "should not come here from updating location");
                 break;
             default:
@@ -304,6 +330,9 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 break;
             case AsyncTaskPayload.DESTROY_SHOUT:
                 Log.v("not yet implemented", "");
+                break;
+            case AsyncTaskPayload.LOGIN:
+                Log.v("WTFException", "should not come here from updating location");
                 break;
             default:
                 Log.v("WTFException", "seriously wtf?");

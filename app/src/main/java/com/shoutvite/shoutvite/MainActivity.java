@@ -24,7 +24,7 @@ import java.util.List;
 public class MainActivity extends FragmentActivity {
     RailsAPI API;
     Location lastLocation;
-    CallbackManager callbackManager;    //should not be here but for now, convenience
+  //  CallbackManager callbackManager;    //should not be here but for now, convenience, also required for facebook
     FragmentTabHost tabHost;
     int lastTab = 0;
     int currentTab = 0;
@@ -40,16 +40,16 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(this);
+  //      FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_main);
         // set different sized tabs: tabHost.getTabWidget().getChildAt(0).getLayoutParams().height = 35; OR
         // tabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams(width,height));
         tabHost = (FragmentTabHost) findViewById(R.id.tabHost);
         tabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
         View logoView = LayoutInflater.from(this).inflate(R.layout.logo_view, null);
-        tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator(logoView), ShoutListFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("map frag").setIndicator("Map"), CustomMapFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec("tab 1").setIndicator("Profile"), PlaceholderTabFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator(logoView), ShoutListFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("tab 1").setIndicator("Profile"), ProfileTabFragment.class, null);
         //[TODO: different sizes for different devices]:
         //  ImageView logoView = (ImageView) findViewById(R.id.placeholder_logo);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {

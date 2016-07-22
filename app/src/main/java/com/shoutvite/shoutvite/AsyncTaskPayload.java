@@ -13,6 +13,7 @@ public class AsyncTaskPayload {
     public static final int UPDATE_SHOUT = 4;
     public static final int DESTROY_SHOUT = 5;
     public static final int CREATE_USER = 6;
+    public static final int LOGIN = 7;
 
     public int task;
 
@@ -54,6 +55,13 @@ public class AsyncTaskPayload {
     public static AsyncTaskPayload createUserPayload(User user){
         AsyncTaskPayload payload = new AsyncTaskPayload();
         payload.task = CREATE_USER;
+        payload.user = user;
+        return payload;
+    }
+
+    public static AsyncTaskPayload createLoginPayload(User user){
+        AsyncTaskPayload payload = new AsyncTaskPayload();
+        payload.task = LOGIN;
         payload.user = user;
         return payload;
     }

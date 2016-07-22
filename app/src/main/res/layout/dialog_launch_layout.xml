@@ -7,24 +7,80 @@
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/generalFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/blue_background">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:weightSum="10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4.5"
+                android:orientation="vertical"
+                android:weightSum="10"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.5"
+                    android:text="SHOUTS NEAR"
+                    android:background="@drawable/shout_text_background"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+
+                    />
+
+                <ListView
+                    android:id="@+id/map_shout_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="8.5"
+                    android:background="@drawable/list_background"
+                    android:padding="10dp"
+                    ></ListView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4.5"
+                android:orientation="vertical"
+                android:weightSum="10"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.5"
+                    android:text="MY LAST SHOUTS"
+                    android:background="@drawable/shout_text_background"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="10dp"
+
+                    />
+
+                <ListView
+                    android:id="@+id/user_shout_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="8.5"
+                    android:background="@drawable/list_background"
+                    android:padding="10dp"
+                    ></ListView>
+            </LinearLayout>
 
             <Button
                 android:id="@+id/launch_button"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:text="@string/shout_dialog" />
-
-            <ListView
-                android:id="@+id/map_shout_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3500"></ListView>
 
         </LinearLayout>
     </FrameLayout>
