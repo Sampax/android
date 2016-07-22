@@ -52,8 +52,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     BitmapDescriptor bitmap = null;
     Bitmap bmap = null;
     MainActivity main;
-    List<String> shouts;
-    ArrayAdapter<String> shoutAdapter;
 
     @Override
     public void onCreate(Bundle savedStateInstance){
@@ -76,7 +74,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             view = inflater.inflate(R.layout.map_layout, container, false);
             previousContainer = container;
         }
-        shouts = new ArrayList<String>();
 
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.gmap);
@@ -87,16 +84,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         bitmap = BitmapDescriptorFactory.fromResource(R.drawable.logo);
         bitmap = BitmapDescriptorFactory.fromBitmap(bmap);
         //custom adapter to access textView because android is a piece of shit software that should be exterminated
-        shoutAdapter = new ArrayAdapter<String>(getActivity(), R.layout.shout, R.id.shout_text, shouts){
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                TextView textView = (TextView) super.getView(position, convertView, parent);
-                textView.setBackground(new BitmapDrawable(getResources(), bmap));
-                return textView;
-            }
-        };
-        ListView listView = (ListView)view.findViewById(R.id.map_shout_list);
-        listView.setAdapter(shoutAdapter);
         FrameLayout frame1 = (FrameLayout) view.findViewById(R.id.frame1);
         FrameLayout frame2 = (FrameLayout) view.findViewById(R.id.frame2);
         if(frame1.getVisibility() == View.VISIBLE) {
@@ -257,13 +244,13 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 
     public void updateShoutsOnMap(List<Shout> shoutList){
         Log.v("jeeeeeeeeeeeeeeeeee", "toimii");
-        shouts.clear();
+        main.shouts.clear();
         for(int i = 0; i < shoutList.size(); i++){
             Shout aux = shoutList.get(i);
             map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap));
-            shouts.add(aux.getContent());
+            main.shouts.add(aux.getContent());
         }
-        shoutAdapter.notifyDataSetChanged();
+        main.shoutAdapter.notifyDataSetChanged();
         //               APIConnector api = ((MainActivity) getActivity()).API;
         //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
         //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]

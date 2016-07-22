@@ -1,27 +1,25 @@
 package com.shoutvite.shoutvite;
 
-import android.content.Intent;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 
 import com.facebook.appevents.AppEventsLogger;
-import com.google.android.gms.maps.MapFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends FragmentActivity {
     RailsAPI API;
@@ -34,6 +32,11 @@ public class MainActivity extends FragmentActivity {
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
     User user;
 
+    List<String> shouts;
+    public ArrayAdapter<String> shoutAdapter;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +47,7 @@ public class MainActivity extends FragmentActivity {
         tabHost = (FragmentTabHost) findViewById(R.id.tabHost);
         tabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
         View logoView = LayoutInflater.from(this).inflate(R.layout.logo_view, null);
-        tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator(logoView), DialogLaunchFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator(logoView), ShoutListFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("map frag").setIndicator("Map"), CustomMapFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("tab 1").setIndicator("Profile"), PlaceholderTabFragment.class, null);
         //[TODO: different sizes for different devices]:
@@ -58,6 +61,15 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
+        shouts = new ArrayList<String>();
+        shoutAdapter = new ArrayAdapter<String>(this, R.layout.shout, R.id.shout_text, shouts){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView textView = (TextView) super.getView(position, convertView, parent);
+                //textView.setBackground(new BitmapDrawable(getResources(), bmap));
+                return textView;
+            }
+        };
 
         //   mapFrag = (CustomMapFragment) getSupportFragmentManager().findFragmentBy;
         //   mapFrag.updateShoutsOnMap(null);

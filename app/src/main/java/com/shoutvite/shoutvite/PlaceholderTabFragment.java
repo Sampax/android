@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
@@ -58,6 +59,17 @@ public class PlaceholderTabFragment extends Fragment {
             @Override
             public void onError(FacebookException error) {
                 Log.v("login", "error");
+            }
+        });
+        Button createUserButton = (Button) view.findViewById(R.id.username_launch_button);
+        createUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Button button = (Button) v.findViewById(R.id.launch_button);
+                //button.setText("jee");
+                CreateUserDialogFragment newUserDialog = new CreateUserDialogFragment();
+                newUserDialog.show(getActivity().getSupportFragmentManager(), "username dialog");
+
             }
         });
 
