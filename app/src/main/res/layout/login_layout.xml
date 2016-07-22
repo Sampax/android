@@ -4,10 +4,10 @@
     android:layout_height="match_parent">
 
     <EditText
-        android:id="@+id/newuser"
+        android:id="@+id/login_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="type username"
+        android:hint="type email"
         android:inputType="textMultiLine"
         android:gravity="top|left"
         android:lines="1"
@@ -15,18 +15,7 @@
         />
 
     <EditText
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="type email"
-        android:gravity="top|left"
-        android:lines="1"
-        android:background="@android:color/transparent"
-        />
-
-
-    <EditText
-        android:id="@+id/password"
+        android:id="@+id/login_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="type password"

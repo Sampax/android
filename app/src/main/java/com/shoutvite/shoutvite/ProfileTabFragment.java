@@ -90,8 +90,8 @@ public class ProfileTabFragment extends Fragment {
             public void onClick(View v) {
                 //Button button = (Button) v.findViewById(R.id.launch_button);
                 //button.setText("jee");
-                //CreateUserDialogFragment newUserDialog = new CreateUserDialogFragment();
-                //newUserDialog.show(getActivity().getSupportFragmentManager(), "username dialog");
+                LoginDialogFragment loginDialog = new LoginDialogFragment();
+                loginDialog.show(getActivity().getSupportFragmentManager(), "login dialog");
 
             }
         });

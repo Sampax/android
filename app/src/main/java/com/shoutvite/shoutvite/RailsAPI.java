@@ -264,7 +264,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         switch (payload.task){
             case AsyncTaskPayload.CREATE_USER:
                 payload.user = createUser(user.getNick(), user.getEmail(), user.getPassword());
-                Log.v("WTFException createuser", "should not come here from updating location");
+                Log.v("WTFException createuser", "should not come here from updating locationnn");
                 break;
             case AsyncTaskPayload.PUSH_SHOUT:
                 payload.shout = pushShout(shout, user);
