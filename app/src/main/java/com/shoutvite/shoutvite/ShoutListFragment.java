@@ -53,6 +53,20 @@ public class ShoutListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapter, View item, int position, long arg4){
                 Shout shout = main.shoutsAsShouts.get(position);
                 Log.v("shout", shout.getContent() + " " + shout.getId());
+                main.changeTab(shout);
+
+            }
+        });
+        final ListView joinedListView = (ListView)view.findViewById(R.id.user_shout_list);
+        joinedListView.setAdapter(main.joinedShoutAdapter);
+        joinedListView.setOnItemClickListener(new ListView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View item, int position, long arg4){
+               // Shout shout = main.shoutsAsShouts.get(position);
+               // Log.v("shout", shout.getContent() + " " + shout.getId());
+               // main.changeTab(shout);
+                Log.v("joined shout", "clicked");
+
             }
         });
 

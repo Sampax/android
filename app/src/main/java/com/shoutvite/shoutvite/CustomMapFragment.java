@@ -55,6 +55,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     BitmapDescriptor bitmap = null;
     Bitmap bmap = null;
     MainActivity main;
+    Map<Marker, Shout> markersHashMap;
+    Map<Shout, Marker> shoutsHashMap;
+    boolean cameFromShoutList = false;
 
     @Override
     public void onCreate(Bundle savedStateInstance){
@@ -126,7 +129,10 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.setMyLocationEnabled(true);   //adds the marker for user position
         }
         pos = new CameraPosition(initLocation, zoom, 0, 0);
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+        if(!cameFromShoutList) {
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+            cameFromShoutList = false;
+        }
     }
 
     public LatLng getInitialLocation() {
@@ -248,19 +254,25 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     public void updateShoutsOnMap(List<Shout> shoutList){
         Log.v("jeeeeeeeeeeeeeeeeee", "toimii");
         main.shouts.clear();
-        final Map<Marker, Shout> markersHashMap = new HashMap<Marker, Shout>();
+        markersHashMap = new HashMap<Marker, Shout>();
+        shoutsHashMap = new HashMap<Shout, Marker>();
         main.shoutsAsShouts = shoutList;
         for(int i = 0; i < shoutList.size(); i++){
             Shout aux = shoutList.get(i);
             Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap).title(aux.getContent()).snippet("Click to join"));
             markersHashMap.put(newMarker, aux);
+            shoutsHashMap.put(aux, newMarker);
             main.shouts.add(aux.getContent());
             map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
                 @Override
                 public void onInfoWindowClick(Marker marker){
                     Shout shout = markersHashMap.get(marker);
-                    Log.v("info window", "clicked " + shout.getContent());
-
+                    if(!main.joinedShouts.contains(shout)) {
+                        main.joinedShouts.add(shout);
+                        main.joinedShoutAsString.add(shout.getContent());
+                        main.joinedShoutAdapter.notifyDataSetChanged();
+                    }
+                        Log.v("info window", "clicked " + shout.getContent());
                 }
             });
         }
@@ -299,6 +311,16 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 
         }
 
+    }
+
+    public void zoomToShout(Shout shout){
+        Marker mapMarker = shoutsHashMap.get(shout);
+        LatLng position = mapMarker.getPosition();
+        Log.v("marker position", ""+position.latitude);
+        cameFromShoutList = true;
+        CameraPosition pos = new CameraPosition(position, ZOOM_LEVEL, 0,0);
+        mapMarker.showInfoWindow();
+        map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
     }
 
 }

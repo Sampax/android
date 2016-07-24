@@ -29,16 +29,21 @@ public class MainActivity extends FragmentActivity {
     int lastTab = 0;
     int currentTab = 0;
     CustomMapFragment mapFrag;
+    int MAPTABINDEX = 0;
+
     ProfileTabFragment profileFrag;
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
     User user;
 
     List<String> shouts;
     public ArrayAdapter<String> shoutAdapter;
+    public ArrayAdapter<String> joinedShoutAdapter;
 
     List<Shout> shoutsAsShouts;
 
 
+    List<Shout> joinedShouts;
+    List<String> joinedShoutAsString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +78,16 @@ public class MainActivity extends FragmentActivity {
                 return textView;
             }
         };
-
+        joinedShouts = new ArrayList<Shout>();
+        joinedShoutAsString = new ArrayList<String>();
+        joinedShoutAdapter = new ArrayAdapter<String>(this, R.layout.shout, R.id.shout_text, joinedShoutAsString){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView textView = (TextView) super.getView(position, convertView, parent);
+                //textView.setBackground(new BitmapDrawable(getResources(), bmap));
+                return textView;
+            }
+        };
         //   mapFrag = (CustomMapFragment) getSupportFragmentManager().findFragmentBy;
         //   mapFrag.updateShoutsOnMap(null);
         //These two lines would activate gathering user data (for example demographics
@@ -120,6 +134,13 @@ public class MainActivity extends FragmentActivity {
         profileFrag.hasUserUpdateUI(true);
         Log.v("uusi käyttäjääää:", user.getAuthToken());
     }
+
+    public void changeTab(Shout focusedShout){
+        tabHost.setCurrentTab(MAPTABINDEX);
+        mapFrag.zoomToShout(focusedShout);
+
+    }
+
 }
 
 
