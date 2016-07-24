@@ -12,6 +12,7 @@
         android:gravity="top|left"
         android:lines="1"
         android:background="@android:color/transparent"
+
         />
 
     <EditText

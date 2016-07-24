@@ -31,11 +31,14 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Lauri on 6/20/2016.
@@ -245,13 +248,24 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     public void updateShoutsOnMap(List<Shout> shoutList){
         Log.v("jeeeeeeeeeeeeeeeeee", "toimii");
         main.shouts.clear();
+        final Map<Marker, Shout> markersHashMap = new HashMap<Marker, Shout>();
         main.shoutsAsShouts = shoutList;
         for(int i = 0; i < shoutList.size(); i++){
             Shout aux = shoutList.get(i);
-            map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap));
+            Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap).title(aux.getContent()).snippet("Click to join"));
+            markersHashMap.put(newMarker, aux);
             main.shouts.add(aux.getContent());
+            map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
+                @Override
+                public void onInfoWindowClick(Marker marker){
+                    Shout shout = markersHashMap.get(marker);
+                    Log.v("info window", "clicked " + shout.getContent());
+
+                }
+            });
         }
         main.shoutAdapter.notifyDataSetChanged();
+
         //               APIConnector api = ((MainActivity) getActivity()).API;
         //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
         //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]

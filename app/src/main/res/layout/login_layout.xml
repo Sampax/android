@@ -5,24 +5,26 @@
 
     <EditText
         android:id="@+id/login_email"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="type email"
         android:inputType="textMultiLine"
         android:gravity="top|left"
         android:lines="1"
-        android:background="@android:color/transparent"
+        android:background="@drawable/list_background"
+        android:paddingLeft="10dp"
         />
 
     <EditText
         android:id="@+id/login_password"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="type password"
         android:gravity="top|left"
         android:lines="1"
-        android:background="@android:color/transparent"
+        android:background="@drawable/list_background"
         android:inputType="textPassword"
+        android:paddingLeft="10dp"
         />
 
 </LinearLayout>
