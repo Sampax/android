@@ -214,6 +214,9 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             user.put("password", password);
             String url = actual_API_URL + "users";
             String response = POST(user, url);
+            if(response == null){
+                return null;
+            }
 //            Log.v("POST response", response);
             JSONObject JResponse = new JSONObject(response);
             String authToken = JResponse.getString("auth_token");
@@ -234,6 +237,9 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             user.put("password", password);
             String url = actual_API_URL + "login";
             String response = POST(user, url);
+            if(response == null){
+                return null;
+            }
 //            Log.v("POST response", response);
             JSONObject JResponse = new JSONObject(response);
             Log.v("login response: ", JResponse.toString());
@@ -313,7 +319,11 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         }
         switch (payload.task) {
             case AsyncTaskPayload.CREATE_USER:
-                mainRef.get().setUser(payload.user);
+                if(payload.user != null) {
+                    mainRef.get().setUser(payload.user);
+                }else{
+                    Log.v("user creation", "failed");
+                }
                 break;
             case AsyncTaskPayload.PUSH_SHOUT:
                 Log.v("not yet implemented", "fully");
@@ -332,7 +342,12 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("not yet implemented", "");
                 break;
             case AsyncTaskPayload.LOGIN:
-                Log.v("WTFException", "should not come here from updating location");
+                if(payload.user != null) {
+                    mainRef.get().setUser(payload.user);
+                    Log.v("WTFException", "should not come here from updating location");
+                }else{
+                    Log.v("login", "failed");
+                }
                 break;
             default:
                 Log.v("WTFException", "seriously wtf?");

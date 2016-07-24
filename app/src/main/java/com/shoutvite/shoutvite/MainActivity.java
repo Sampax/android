@@ -29,11 +29,14 @@ public class MainActivity extends FragmentActivity {
     int lastTab = 0;
     int currentTab = 0;
     CustomMapFragment mapFrag;
+    ProfileTabFragment profileFrag;
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
     User user;
 
     List<String> shouts;
     public ArrayAdapter<String> shoutAdapter;
+
+    List<Shout> shoutsAsShouts;
 
 
 
@@ -78,12 +81,6 @@ public class MainActivity extends FragmentActivity {
 //        AppEventsLogger.activateApp(this);    //depricated
     }
 
-    public void shoutClicked(View view) {
-        Log.v("clickattu", "jee");
-        View rootView = view.getRootView();
-  //      ((FrameLayout) rootView.findViewById(R.id.frame1)).setVisibility(View.GONE);
-  //      ((FrameLayout) rootView.findViewById(R.id.frame2)).setVisibility(View.VISIBLE);
-    }
 
     public void testShoutButton(String shoutContent) {
         Log.v("postattuuu", shoutContent);
@@ -120,7 +117,8 @@ public class MainActivity extends FragmentActivity {
 
     public void setUser(User newUser) {
         user = newUser;
-        Log.v("uusi käyttäjä:", user.getAuthToken());
+        profileFrag.hasUserUpdateUI(true);
+        Log.v("uusi käyttäjääää:", user.getAuthToken());
     }
 }
 

@@ -29,6 +29,7 @@ public class ProfileTabFragment extends Fragment {
     public void onCreate(Bundle savedStateInstance){
         super.onCreate(savedStateInstance);
         main = (MainActivity)getActivity();
+        main.profileFrag = this;
     }
 
     @Override
@@ -95,17 +96,46 @@ public class ProfileTabFragment extends Fragment {
 
             }
         });
+        Button customLogoutButton = (Button) view.findViewById(R.id.custom_logout_button);
+        customLogoutButton.setVisibility(View.GONE);
+        customLogoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.v("clickattu", "log out");
+                hasUserUpdateUI(false);
+                main.user = null;
+            }
+        });
 
         if(main.user != null) {
             TextView textView = (TextView) view.findViewById(R.id.teksti);
             textView.setText(main.user.getNick() + "\n" + main.user.getEmail());
             createUserButton.setVisibility(View.GONE);
-            customLoginButton.setText("Log  out");
+            customLoginButton.setText("Log  ooooout");
         }
         return view;
     }
 
+    public void hasUserUpdateUI(boolean loggedIn){
+        TextView userText = (TextView)getView().findViewById(R.id.teksti);
+        String username = "";
+        if(loggedIn) {
+            if (main.user.getNick() != null) {
+                username = main.user.getNick();
+            }
+            userText.setText(username + "\n" + main.user.getEmail());
+            ((Button) getView().findViewById(R.id.username_launch_button)).setVisibility(View.GONE);
+            ((Button) getView().findViewById(R.id.custom_logout_button)).setVisibility(View.VISIBLE);
+            ((Button) getView().findViewById(R.id.custom_login_button)).setVisibility(View.GONE);
+        }else{
+            ((Button) getView().findViewById(R.id.username_launch_button)).setVisibility(View.VISIBLE);
+            ((Button) getView().findViewById(R.id.custom_logout_button)).setVisibility(View.GONE);
+            ((Button) getView().findViewById(R.id.custom_login_button)).setVisibility(View.VISIBLE);
+            userText.setText("");
 
+        }
+        ;
+    }
   /*  public void setUser(User newUser){
             TextView textView = (TextView) view.findViewById(R.id.teksti);
             textView.setText(main.user.getNick() + "\n" + main.user.getEmail());

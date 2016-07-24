@@ -245,6 +245,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     public void updateShoutsOnMap(List<Shout> shoutList){
         Log.v("jeeeeeeeeeeeeeeeeee", "toimii");
         main.shouts.clear();
+        main.shoutsAsShouts = shoutList;
         for(int i = 0; i < shoutList.size(); i++){
             Shout aux = shoutList.get(i);
             map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap));

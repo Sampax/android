@@ -31,7 +31,9 @@ public class CreateUserDialogFragment extends DialogFragment {
                 MainActivity main = (MainActivity)getActivity();
                 EditText userText = (EditText)((AlertDialog) dialog).findViewById(R.id.newuser);
                 String username = userText.getText().toString();
-                User user = new User(username + "@jormail.com", username, null, "salasana");
+                userText = (EditText)((AlertDialog) dialog).findViewById(R.id.email);
+                String email = userText.getText().toString();
+                User user = new User(email, username, null, "salasana");
                 AsyncTaskPayload payload = AsyncTaskPayload.createUserPayload(user);
 
                 new RailsAPI(main).execute(payload);

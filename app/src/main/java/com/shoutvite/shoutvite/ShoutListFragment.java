@@ -4,9 +4,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -33,16 +35,26 @@ public class ShoutListFragment extends Fragment {
         launchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Button button = (Button) v.findViewById(R.id.launch_button);
-                button.setText("jee");
-                ShoutDialogFragment newShoutDialog = new ShoutDialogFragment();
-                newShoutDialog.show(getActivity().getSupportFragmentManager(), "tag_to_find_this_fragment");
-
+                //Button button = (Button) v.findViewById(R.id.launch_button);
+              //  button.setText("jeeeeeee");
+                if(main.user != null) {
+                    ShoutDialogFragment newShoutDialog = new ShoutDialogFragment();
+                    newShoutDialog.show(getActivity().getSupportFragmentManager(), "tag_to_find_this_fragment");
+                }else{
+                    LoginDialogFragment loginDialog = new LoginDialogFragment();
+                    loginDialog.show(getActivity().getSupportFragmentManager(), "login dialog");
+                }
             }
         });
-        ListView listView = (ListView)view.findViewById(R.id.map_shout_list);
+        final ListView listView = (ListView)view.findViewById(R.id.map_shout_list);
         listView.setAdapter(main.shoutAdapter);
-
+        listView.setOnItemClickListener(new ListView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View item, int position, long arg4){
+                Shout shout = main.shoutsAsShouts.get(position);
+                Log.v("shout", shout.getContent() + " " + shout.getId());
+            }
+        });
 
         FrameLayout generalFrame = (FrameLayout) view.findViewById(R.id.generalFrame);
         FrameLayout shoutFrame = (FrameLayout) view.findViewById(R.id.shoutFrame);
