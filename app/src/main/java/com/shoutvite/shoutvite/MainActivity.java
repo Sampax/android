@@ -30,8 +30,11 @@ public class MainActivity extends FragmentActivity {
     int currentTab = 0;
     CustomMapFragment mapFrag;
     int MAPTABINDEX = 0;
+    int PROFILETABINDEX = 2;
 
     ProfileTabFragment profileFrag;
+    ShoutListFragment shoutFrag;
+
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
     User user;
 
@@ -45,6 +48,9 @@ public class MainActivity extends FragmentActivity {
     List<Shout> joinedShouts;
     List<String> joinedShoutAsString;
 
+    public ArrayAdapter<String> chatAdapter;
+    public List<String> chatMessages;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +63,9 @@ public class MainActivity extends FragmentActivity {
         View logoView = LayoutInflater.from(this).inflate(R.layout.logo_view, null);
         tabHost.addTab(tabHost.newTabSpec("map frag").setIndicator("Map"), CustomMapFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator(logoView), ShoutListFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec("tab 1").setIndicator("Profile"), ProfileTabFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("profile frag").setIndicator("Profile"), ProfileTabFragment.class, null);
         //[TODO: different sizes for different devices]:
+        changeTab(0);
         //  ImageView logoView = (ImageView) findViewById(R.id.placeholder_logo);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -88,6 +95,12 @@ public class MainActivity extends FragmentActivity {
                 return textView;
             }
         };
+
+        chatMessages = new ArrayList<String>();
+        chatMessages.add("jee");
+        chatMessages.add("jeejeeeeeeee");
+        chatAdapter = new ArrayAdapter<String>(this, R.layout.shout, R.id.shout_text, chatMessages);
+
         //   mapFrag = (CustomMapFragment) getSupportFragmentManager().findFragmentBy;
         //   mapFrag.updateShoutsOnMap(null);
         //These two lines would activate gathering user data (for example demographics
@@ -97,7 +110,7 @@ public class MainActivity extends FragmentActivity {
 
 
     public void testShoutButton(String shoutContent) {
-        Log.v("postattuuu", shoutContent);
+        Log.v("postaaaattuuu", shoutContent);
     }
 
 
@@ -139,6 +152,21 @@ public class MainActivity extends FragmentActivity {
         tabHost.setCurrentTab(MAPTABINDEX);
         mapFrag.zoomToShout(focusedShout);
 
+    }
+
+    public void changeTab(){
+        tabHost.setCurrentTab(PROFILETABINDEX);
+        profileFrag.launchLoginDialog();
+
+    }
+
+    public void backToList(View view){
+        shoutFrag.generalFrame.setVisibility(View.VISIBLE);
+        shoutFrag.shoutFrame.setVisibility(View.GONE);
+    }
+
+    public void changeTab(int tab){
+        tabHost.setCurrentTab(tab);
     }
 
 }

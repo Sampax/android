@@ -65,6 +65,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         main = (MainActivity)getActivity();
         main.mapFrag = this;   //to get a handle for this fragment, holy shit the hardest thing ever
 //        ((MainActivity)getActivity()).mapFrag.updateShoutsOnMap(null);
+        Log.v("Here", "map");
+        main.changeTab(1);
 
     }
 
@@ -269,6 +271,12 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                     Shout shout = markersHashMap.get(marker);
                     if(!main.joinedShouts.contains(shout)) {
                         main.joinedShouts.add(shout);
+                        if(main.joinedShoutAsString == null){
+                            Log.v("joined", "on null");
+                        }
+                        if(shout == null){
+                            Log.v("shoutttt", "on null");
+                        }
                         main.joinedShoutAsString.add(shout.getContent());
                         main.joinedShoutAdapter.notifyDataSetChanged();
                     }

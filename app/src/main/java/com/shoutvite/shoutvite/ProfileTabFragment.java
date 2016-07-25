@@ -1,5 +1,6 @@
 package com.shoutvite.shoutvite;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,11 +26,15 @@ public class ProfileTabFragment extends Fragment {
     MainActivity main;
     //public CallbackManager callbackManager;
 
+
     @Override
     public void onCreate(Bundle savedStateInstance){
         super.onCreate(savedStateInstance);
         main = (MainActivity)getActivity();
         main.profileFrag = this;
+        Log.v("Here", "profile");
+        main.changeTab(0); //need to make full circle at the start
+
     }
 
     @Override
@@ -111,7 +116,8 @@ public class ProfileTabFragment extends Fragment {
             TextView textView = (TextView) view.findViewById(R.id.teksti);
             textView.setText(main.user.getNick() + "\n" + main.user.getEmail());
             createUserButton.setVisibility(View.GONE);
-            customLoginButton.setText("Log  ooooout");
+            customLoginButton.setVisibility(View.GONE);
+            customLogoutButton.setVisibility(View.VISIBLE);
         }
         return view;
     }
@@ -135,6 +141,13 @@ public class ProfileTabFragment extends Fragment {
 
         }
         ;
+    }
+
+
+    public void launchLoginDialog(){
+        LoginDialogFragment loginDialog = new LoginDialogFragment();
+        loginDialog.show(getActivity().getSupportFragmentManager(), "login dialog");
+
     }
   /*  public void setUser(User newUser){
             TextView textView = (TextView) view.findViewById(R.id.teksti);

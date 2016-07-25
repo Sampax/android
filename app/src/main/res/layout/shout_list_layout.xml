@@ -22,17 +22,17 @@
                 android:layout_height="0dp"
                 android:layout_weight="4.5"
                 android:orientation="vertical"
-                android:weightSum="10"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:weightSum="10">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.5"
-                    android:text="SHOUTS NEAR"
                     android:background="@drawable/shout_text_background"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
+                    android:text="SHOUTS NEAR"
 
                     />
 
@@ -42,8 +42,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="8.5"
                     android:background="@drawable/list_background"
-                    android:padding="10dp"
-                    ></ListView>
+                    android:padding="10dp"></ListView>
             </LinearLayout>
 
             <LinearLayout
@@ -51,17 +50,17 @@
                 android:layout_height="0dp"
                 android:layout_weight="4.5"
                 android:orientation="vertical"
-                android:weightSum="10"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:weightSum="10">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.5"
-                    android:text="MY LAST SHOUTS"
                     android:background="@drawable/shout_text_background"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
+                    android:text="MY LAST SHOUTS"
 
                     />
 
@@ -71,8 +70,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="8.5"
                     android:background="@drawable/list_background"
-                    android:padding="10dp"
-                    ></ListView>
+                    android:padding="10dp"></ListView>
             </LinearLayout>
 
             <Button
@@ -90,6 +88,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:weightSum="10">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"
+                android:src="@drawable/shoutvite_white_blue"
+                android:onClick="backToList"/>
+
+            <ListView
+                android:id="@+id/chat_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7">
+            </ListView>
+
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.5" />
+
+        </LinearLayout>
 
     </FrameLayout>
 </FrameLayout>
