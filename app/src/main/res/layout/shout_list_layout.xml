@@ -8,7 +8,7 @@
         android:id="@+id/generalFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/blue_background">
+        android:background="@drawable/backround1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -86,7 +86,8 @@
     <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/shoutFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,19 +95,27 @@
             android:orientation="vertical"
             android:weightSum="10">
 
-            <ImageView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1.5"
-                android:src="@drawable/shoutvite_white_blue"
-                android:onClick="backToList"/>
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="backToList"
+                    android:paddingLeft="10dp"
+                    android:src="@drawable/arrow_blue" />
+            </LinearLayout>
 
             <ListView
                 android:id="@+id/chat_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="7">
-            </ListView>
+                android:layout_weight="7"></ListView>
 
 
             <EditText

@@ -21,6 +21,7 @@ import com.facebook.appevents.AppEventsLogger;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class MainActivity extends FragmentActivity {
     RailsAPI API;
     Location lastLocation;
@@ -30,6 +31,7 @@ public class MainActivity extends FragmentActivity {
     int currentTab = 0;
     CustomMapFragment mapFrag;
     int MAPTABINDEX = 0;
+    int LISTTABINDEX = 1;
     int PROFILETABINDEX = 2;
 
     ProfileTabFragment profileFrag;
@@ -148,12 +150,15 @@ public class MainActivity extends FragmentActivity {
         Log.v("uusi käyttäjääää:", user.getAuthToken());
     }
 
+    //changes tab to map tab and focuses on a certain tab
     public void changeTab(Shout focusedShout){
         tabHost.setCurrentTab(MAPTABINDEX);
         mapFrag.zoomToShout(focusedShout);
 
     }
 
+
+    //changes to profile tab and launce login dialog
     public void changeTab(){
         tabHost.setCurrentTab(PROFILETABINDEX);
         profileFrag.launchLoginDialog();
@@ -167,6 +172,13 @@ public class MainActivity extends FragmentActivity {
 
     public void changeTab(int tab){
         tabHost.setCurrentTab(tab);
+    }
+
+    public void changeTabToJoinedShout(Shout shout){
+        tabHost.setCurrentTab(LISTTABINDEX);
+        shoutFrag.openShout(shout);
+        Log.v("tab changed", "yes it is");
+
     }
 
 }

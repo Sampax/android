@@ -20,6 +20,7 @@ public class ShoutListFragment extends Fragment {
     public MainActivity main;
     public FrameLayout generalFrame;
     public FrameLayout shoutFrame;
+    public boolean swapVisibility;
 
 
     @Override
@@ -27,7 +28,7 @@ public class ShoutListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         main = (MainActivity) getActivity();
         main.shoutFrag = this;
-        Log.v("Here", "shout list");
+        Log.v("Hereeee", "shout list");
         main.changeTab(2);
 
 
@@ -67,6 +68,16 @@ public class ShoutListFragment extends Fragment {
         joinedListView.setAdapter(main.joinedShoutAdapter);
         generalFrame = (FrameLayout) view.findViewById(R.id.generalFrame);
         shoutFrame = (FrameLayout) view.findViewById(R.id.shoutFrame);
+        if(swapVisibility){
+            if(shoutFrame.getVisibility() == View.VISIBLE){
+                shoutFrame.setVisibility(View.GONE);
+                generalFrame.setVisibility(View.VISIBLE);
+
+            }else{
+                shoutFrame.setVisibility(View.VISIBLE);
+                generalFrame.setVisibility(View.GONE);
+            }
+        }
         final View chatView = view;
         joinedListView.setOnItemClickListener(new ListView.OnItemClickListener(){
             @Override
@@ -74,7 +85,7 @@ public class ShoutListFragment extends Fragment {
                // Shout shout = main.shoutsAsShouts.get(position);
                // Log.v("shout", shout.getContent() + " " + shout.getId());
                // main.changeTab(shout);
-                Log.v("joined shout", "clicked");
+                Log.v("joined shout", "clickeddd");
                 if(generalFrame.getVisibility() == View.VISIBLE) {
                     shoutFrame.setVisibility(View.VISIBLE);
                     generalFrame.setVisibility(View.GONE);
@@ -85,13 +96,15 @@ public class ShoutListFragment extends Fragment {
 
             }
         });
-
-        if(generalFrame.getVisibility() == View.VISIBLE) {
-            shoutFrame.setVisibility(View.GONE);
-        }else{
-            shoutFrame.setVisibility(View.VISIBLE);
-        }
+        Log.v("should only come here", "at the start");
         return view;
+    }
+
+    public void openShout(Shout shout){
+//        shoutFrame.setVisibility(View.VISIBLE);
+  //      generalFrame.setVisibility(View.GONE);
+        swapVisibility = true;
+        Log.v("hear", "hear");
     }
 
 }

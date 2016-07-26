@@ -156,14 +156,19 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             JSONObject query = new JSONObject();
             query.put("name", shout.getContent());
             query.put("lat", lat);
-            query.put("lat", lon);
+            query.put("lon", lon);
             query.put("creator", shout.getOwner());
             String url = actual_API_URL + "shouts";
             String response = POST(query, url, user.getAuthToken());
+            JSONObject responseJSON = new JSONObject(response);
+            Log.v("post shout response:", response);
+            shout.setChannel(responseJSON.getString("shout_channel"));
+            shout.setId(responseJSON.getInt("shout_id"));
+            return shout;
         }catch(Exception e){
             Log.v("error", e.toString());
+            return null;
         }
-        return null;
     }
 
     public boolean updateShout(int id, double lat, double lon, String shout, String creator, String moderator) {
@@ -176,7 +181,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     }
 
     public List<Shout> getShouts(double lat, double lon, int threshold) {
-        String response = GET(actual_API_URL + "shouts?lon=" + lat + "&lat=" + lon + "&radius=" + threshold);
+        String response = GET(actual_API_URL + "shouts?lon=" + lon + "&lat=" + lat + "&radius=" + threshold);
         Log.v("json fields: ", response);
         List<Shout> shoutList = new ArrayList<Shout>();
         try {
@@ -317,20 +322,25 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         if(payload == null){
             Log.v("fug", "fug");
         }
+        MainActivity main = mainRef.get();
         switch (payload.task) {
             case AsyncTaskPayload.CREATE_USER:
                 if(payload.user != null) {
-                    mainRef.get().setUser(payload.user);
+                    main.setUser(payload.user);
                 }else{
                     Log.v("user creation", "failed");
                 }
                 break;
             case AsyncTaskPayload.PUSH_SHOUT:
-                Log.v("not yet implemented", "fully");
+                if(payload.shout != null){
+                    main.mapFrag.addNewShout(payload.shout);
+                }else {
+                    Log.v("error", "in creating shout");
+                }
                 break;
             case AsyncTaskPayload.GET_SHOUTS:
 
-                mainRef.get().mapFrag.updateShoutsOnMap(payload.shoutList);
+                main.mapFrag.updateShoutsOnMap(payload.shoutList);
                 break;
             case AsyncTaskPayload.GET_SINGLE_SHOUT: //not implemented yet
                 Log.v("not yet implemented", "");
@@ -343,7 +353,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 break;
             case AsyncTaskPayload.LOGIN:
                 if(payload.user != null) {
-                    mainRef.get().setUser(payload.user);
+                    main.setUser(payload.user);
                     Log.v("WTFException", "should not come here from updating location");
                 }else{
                     Log.v("login", "failed");

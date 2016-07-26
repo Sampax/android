@@ -35,7 +35,7 @@ public class ShoutDialogFragment extends DialogFragment {
         });
         builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+                public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });

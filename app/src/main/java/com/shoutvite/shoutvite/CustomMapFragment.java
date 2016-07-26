@@ -50,7 +50,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     private final int MY_LOCATION_ACCESS = 0;
     Location lastLocation = null;
     GoogleMap map = null;
-    int DISTANCE_THRESHOLD = 5000000;
+    int DISTANCE_THRESHOLD = 500;
     int ZOOM_LEVEL = 15;
     BitmapDescriptor bitmap = null;
     Bitmap bmap = null;
@@ -256,6 +256,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     public void updateShoutsOnMap(List<Shout> shoutList){
         Log.v("jeeeeeeeeeeeeeeeeee", "toimii");
         main.shouts.clear();
+        map.clear();
         markersHashMap = new HashMap<Marker, Shout>();
         shoutsHashMap = new HashMap<Shout, Marker>();
         main.shoutsAsShouts = shoutList;
@@ -279,6 +280,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                         }
                         main.joinedShoutAsString.add(shout.getContent());
                         main.joinedShoutAdapter.notifyDataSetChanged();
+                        main.changeTabToJoinedShout(shout);
                     }
                         Log.v("info window", "clicked " + shout.getContent());
                 }
@@ -331,4 +333,17 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
     }
 
+
+    public void addNewShout(Shout shout){
+        main.joinedShoutAsString.add(shout.getContent());
+        main.joinedShouts.add(shout);
+        main.joinedShoutAdapter.notifyDataSetChanged();
+        main.shouts.add(shout.getContent());
+        main.shoutsAsShouts.add(shout);
+        main.shoutAdapter.notifyDataSetChanged();
+        Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(shout.getLat(), shout.getLon())).icon(bitmap).title(shout.getContent()).snippet("Click to join"));
+        shoutsHashMap.put(shout, newMarker);
+        markersHashMap.put(newMarker, shout);
+
+    }
 }
