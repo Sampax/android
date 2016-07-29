@@ -270,15 +270,11 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 @Override
                 public void onInfoWindowClick(Marker marker){
                     Shout shout = markersHashMap.get(marker);
-                    if(!main.joinedShouts.contains(shout)) {
-                        main.joinedShouts.add(shout);
-                        if(main.joinedShoutAsString == null){
-                            Log.v("joined", "on null");
-                        }
-                        if(shout == null){
-                            Log.v("shoutttt", "on null");
-                        }
-                        main.joinedShoutAsString.add(shout.getContent());
+                    if(!main.user.getJoinedShouts().contains(shout)) {
+                        main.user.addJoinedShout(shout);
+                        main.shoutFrag.currentShout = shout;
+                        main.fayeConnector.subscribeToChannel(shout.getChannel());
+                        main.shoutFrag.currentShout = shout;
                         main.joinedShoutAdapter.notifyDataSetChanged();
                         main.changeTabToJoinedShout(shout);
                     }
@@ -335,11 +331,12 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void addNewShout(Shout shout){
-        main.joinedShoutAsString.add(shout.getContent());
-        main.joinedShouts.add(shout);
+        main.user.addJoinedShout(shout);
+        main.fayeConnector.subscribeToChannel(shout.getChannel());
         main.joinedShoutAdapter.notifyDataSetChanged();
         main.shouts.add(shout.getContent());
         main.shoutsAsShouts.add(shout);
+        main.shoutFrag.currentShout = shout;
         main.shoutAdapter.notifyDataSetChanged();
         Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(shout.getLat(), shout.getLon())).icon(bitmap).title(shout.getContent()).snippet("Click to join"));
         shoutsHashMap.put(shout, newMarker);

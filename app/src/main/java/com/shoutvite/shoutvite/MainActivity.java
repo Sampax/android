@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity {
     ShoutListFragment shoutFrag;
 
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
-    User user;
+    final User user = new User(null, null, null);      //only modify object, don't replace
 
     List<String> shouts;
     public ArrayAdapter<String> shoutAdapter;
@@ -47,17 +47,21 @@ public class MainActivity extends FragmentActivity {
     List<Shout> shoutsAsShouts;
 
 
-    List<Shout> joinedShouts;
-    List<String> joinedShoutAsString;
+  //  List<Shout> joinedShouts;
+  //  List<String> joinedShoutAsString;
 
     public ArrayAdapter<String> chatAdapter;
     public List<String> chatMessages;
+
+    public FayeConnector fayeConnector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
   //      FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_main);
+        fayeConnector = new FayeConnector();
+        fayeConnector.init(this);
         // set different sized tabs: tabHost.getTabWidget().getChildAt(0).getLayoutParams().height = 35; OR
         // tabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams(width,height));
         tabHost = (FragmentTabHost) findViewById(R.id.tabHost);
@@ -87,9 +91,9 @@ public class MainActivity extends FragmentActivity {
                 return textView;
             }
         };
-        joinedShouts = new ArrayList<Shout>();
-        joinedShoutAsString = new ArrayList<String>();
-        joinedShoutAdapter = new ArrayAdapter<String>(this, R.layout.shout, R.id.shout_text, joinedShoutAsString){
+        //joinedShouts = new ArrayList<Shout>();
+        //joinedShoutAsString = new ArrayList<String>();
+        joinedShoutAdapter = new ArrayAdapter<String>(this, R.layout.shout, R.id.shout_text, user.getJoinedShoutsAsStrings()){
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 TextView textView = (TextView) super.getView(position, convertView, parent);
@@ -99,8 +103,7 @@ public class MainActivity extends FragmentActivity {
         };
 
         chatMessages = new ArrayList<String>();
-        chatMessages.add("jee");
-        chatMessages.add("jeejeeeeeeee");
+
         chatAdapter = new ArrayAdapter<String>(this, R.layout.shout, R.id.shout_text, chatMessages);
 
         //   mapFrag = (CustomMapFragment) getSupportFragmentManager().findFragmentBy;
@@ -145,7 +148,18 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void setUser(User newUser) {
-        user = newUser;
+        if(newUser.getNick() != null){
+            user.setNick(newUser.getNick());
+        }
+        if(newUser.getAuthToken() != null){
+            user.setAuthToken(newUser.getAuthToken());
+        }
+        if(newUser.getEmail() != null){
+            user.setEmail(newUser.getEmail());
+        }
+        if(newUser.getPassword() != null){          //not needed?
+            user.setPassword(newUser.getPassword());
+        }
         profileFrag.hasUserUpdateUI(true);
         Log.v("uusi käyttäjääää:", user.getAuthToken());
     }

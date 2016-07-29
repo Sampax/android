@@ -69,6 +69,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 return readHttpResponse(connection);
             } else {
                 Log.v("POST response code", ""+ connection.getResponseCode());
+                Log.v("POST message received: ", connection.getResponseMessage());
                 return null;
             }
         } catch (Exception e) {
@@ -106,6 +107,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 return readHttpResponse(connection);
             } else {
                 Log.v("POST response code", ""+ connection.getResponseCode());
+                Log.v("POST message received: ", connection.getResponseMessage());
                 return null;
             }
         } catch (Exception e) {
@@ -296,7 +298,8 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("WTFException", "should not come here from updating location");
                 break;
             case AsyncTaskPayload.LOGIN:
-                payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
+                //payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
+                payload.user = login("marmar", "marmariini@jormail.com", "salasana");
                 Log.v("WTFException", "should not come here from updating location");
                 break;
             default:
@@ -341,6 +344,9 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             case AsyncTaskPayload.GET_SHOUTS:
 
                 main.mapFrag.updateShoutsOnMap(payload.shoutList);
+                if(payload.shoutList.size() > 0) {
+                    Log.v("channel name: ", payload.shoutList.get(0).getChannel());
+                }
                 break;
             case AsyncTaskPayload.GET_SINGLE_SHOUT: //not implemented yet
                 Log.v("not yet implemented", "");
@@ -354,6 +360,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             case AsyncTaskPayload.LOGIN:
                 if(payload.user != null) {
                     main.setUser(payload.user);
+                    main.user.setNick("TEST_USER_REMOVE_FROM_RAILSAPI_CLASS_LATER");
                     Log.v("WTFException", "should not come here from updating location");
                 }else{
                     Log.v("login", "failed");

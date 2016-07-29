@@ -108,11 +108,11 @@ public class ProfileTabFragment extends Fragment {
             public void onClick(View v) {
                 Log.v("clickattu", "log out");
                 hasUserUpdateUI(false);
-                main.user = null;
+                main.user.nullyfyUser(); //same as creating a new user with null values (still creates new joinedshoutlists)
             }
         });
 
-        if(main.user != null) {
+        if(!main.user.isNullified()) {
             TextView textView = (TextView) view.findViewById(R.id.teksti);
             textView.setText(main.user.getNick() + "\n" + main.user.getEmail());
             createUserButton.setVisibility(View.GONE);

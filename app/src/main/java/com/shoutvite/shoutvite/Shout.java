@@ -26,7 +26,7 @@ public class Shout {
     public Shout(int id, String cont, String channel, String own, double latit, double longi){
         this.id = id;
         content = cont;
-        this.channel = channel;
+        this.channel = "/" + channel;
         owner = own;
         lat = latit;
         lon = longi;

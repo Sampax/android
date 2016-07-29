@@ -2,6 +2,7 @@ package com.shoutvite.shoutvite;
 
 import android.location.Location;
 
+import com.elirex.fayeclient.FayeClient;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 public class MockAPI implements APIConnector {
     List<Location> locations = null;
     List<String> messages = null;
+
 
     public MockAPI() {
         messages = new ArrayList<String>();
