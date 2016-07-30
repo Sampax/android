@@ -57,7 +57,8 @@ public class User {
     public void addJoinedShout(Shout shout){
         joinedShouts.add(shout);
         joinedShoutsAsStrings.add(shout.getContent());
-        channelnamesToChannels.put(shout.getChannel(), new FayeChannel(shout.getChannel()));
+        FayeChannel fayeChannel = new FayeChannel(shout.getChannel());
+        channelnamesToChannels.put(shout.getChannel(), fayeChannel);
     }
 
     public String getEmail() {

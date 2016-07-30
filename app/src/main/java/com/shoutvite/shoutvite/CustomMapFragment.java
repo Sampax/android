@@ -271,8 +271,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 public void onInfoWindowClick(Marker marker){
                     Shout shout = markersHashMap.get(marker);
                     if(!main.user.getJoinedShouts().contains(shout)) {
+                        shout.setFayeChannel(new FayeChannel(shout.getChannel()));
                         main.user.addJoinedShout(shout);
-                        main.shoutFrag.currentShout = shout;
+                        main.shoutFrag.setCurrentShout(shout, true);
                         main.fayeConnector.subscribeToChannel(shout.getChannel());
                         main.shoutFrag.currentShout = shout;
                         main.joinedShoutAdapter.notifyDataSetChanged();
@@ -331,6 +332,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void addNewShout(Shout shout){
+        shout.setFayeChannel(new FayeChannel(shout.getChannel()));
         main.user.addJoinedShout(shout);
         main.fayeConnector.subscribeToChannel(shout.getChannel());
         main.joinedShoutAdapter.notifyDataSetChanged();

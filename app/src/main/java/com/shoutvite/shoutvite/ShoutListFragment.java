@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 /**
  * Created by Lauri on 6/21/2016.
  */
@@ -99,10 +101,12 @@ public class ShoutListFragment extends Fragment {
             if(shoutFrame.getVisibility() == View.VISIBLE){
                 shoutFrame.setVisibility(View.GONE);
                 generalFrame.setVisibility(View.VISIBLE);
+                swapVisibility = false;
 
             }else{
                 shoutFrame.setVisibility(View.VISIBLE);
                 generalFrame.setVisibility(View.GONE);
+                swapVisibility = false;
             }
         }
   //      final View chatView = view;
@@ -112,7 +116,9 @@ public class ShoutListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapter, View item, int position, long arg4){
                 Shout shout = main.shoutsAsShouts.get(position);
                 String channel = shout.getChannel();
-                currentShout = shout;
+                setCurrentShout(shout, false);
+                //TODO: need to get show previous messages if any
+
                 //channel = "/fug";
                 //main.fayeConnector.subscribeToChannel(channel);
                // Log.v("shout", shout.getContent() + " " + shout.getId());
@@ -146,14 +152,27 @@ public class ShoutListFragment extends Fragment {
         Log.v("message channel: ", channel);
         if(currentShout.getChannel().equals(channel)){
             Log.v("what", "the hell?");
-            main.chatMessages.add("what the hell?");
-            main.chatMessages.add("what the hell?");
-            main.chatMessages.add("what the hell?");
-            main.chatMessages.add("what the hell?");
-            main.chatMessages.add(user + "says: \n" + message);
+            main.chatMessages.add(user + " says: \n" + message);
             //main.chatAdapter.notifyDataSetChanged();
             main.fayeConnector.doShit();
         }
+    }
+
+    public void setCurrentShout(Shout shout, boolean justJoined){
+        currentShout = shout;
+        main.chatMessages.clear();
+        if(!justJoined){
+            if(main.user.getChannelnamesToChannels().containsKey(shout.getChannel())) {
+                FayeChannel channel = main.user.getChannelnamesToChannels().get(shout.getChannel());
+                for(int i = 0; i < channel.messages.size(); i++){
+                    main.chatMessages.add(channel.messages.get(i).user + " says: \n" + channel.messages.get(i).message);
+                }
+            }else{
+                Log.v("Shit", "Does not contain channel");
+            }
+        }
+        main.chatAdapter.notifyDataSetChanged();
+
     }
 
 }
