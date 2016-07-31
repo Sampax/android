@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -46,6 +47,8 @@ public class MainActivity extends FragmentActivity {
 
     List<Shout> shoutsAsShouts;
 
+    ImageView backArrow;
+    boolean loaded = false;
 
   //  List<Shout> joinedShouts;
   //  List<String> joinedShoutAsString;
@@ -62,6 +65,8 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         fayeConnector = new FayeConnector();
         fayeConnector.init(this);
+        backArrow = (ImageView)findViewById(R.id.back_arrow);
+
         // set different sized tabs: tabHost.getTabWidget().getChildAt(0).getLayoutParams().height = 35; OR
         // tabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams(width,height));
         tabHost = (FragmentTabHost) findViewById(R.id.tabHost);
@@ -79,6 +84,12 @@ public class MainActivity extends FragmentActivity {
                 lastTab = currentTab;
                 currentTab = tabHost.getCurrentTab();
                 tabQueue.add(lastTab);
+
+                backArrow.setVisibility(View.GONE);
+                if(loaded) {
+                    shoutFrag.generalFrame.setVisibility(View.VISIBLE);
+                    shoutFrag.shoutFrame.setVisibility(View.GONE);
+                }
 
             }
         });
@@ -182,6 +193,7 @@ public class MainActivity extends FragmentActivity {
     public void backToList(View view){
         shoutFrag.generalFrame.setVisibility(View.VISIBLE);
         shoutFrag.shoutFrame.setVisibility(View.GONE);
+        backArrow.setVisibility(View.GONE);
     }
 
     public void changeTab(int tab){
@@ -194,6 +206,7 @@ public class MainActivity extends FragmentActivity {
         Log.v("tab changed", "yes it is");
 
     }
+
 
 }
 

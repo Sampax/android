@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Shoutvite</string>
     <string name="placeholder_content_string">Placeholder</string>
-    <string name="shout_dialog">Shout shoutvite</string>
+    <string name="shout_dialog">Create shout</string>
     <string name="create_shout_string">Shout</string>
     <string name="create_user_string">Create user</string>
     <string name="cancel">Cancel</string>

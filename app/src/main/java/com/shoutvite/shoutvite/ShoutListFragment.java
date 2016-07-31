@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -75,37 +76,39 @@ public class ShoutListFragment extends Fragment {
         joinedListView.setAdapter(main.joinedShoutAdapter);
         generalFrame = (FrameLayout) view.findViewById(R.id.generalFrame);
         shoutFrame = (FrameLayout) view.findViewById(R.id.shoutFrame);
+        main.loaded = true;
         Button chatMessageSendButton = (Button) view.findViewById(R.id.chat_message_send_button);
         chatMessageSendButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
-            public void onClick(View view) {
-                view = (View)view.getParent();
-                EditText composedMessage = (EditText)view.findViewById(R.id.chat_message_send);
+            public void onClick(View view) {        //should set a new one each time currentShout changes
                 if(!main.user.isNullified()) {
+                    view = (View)view.getParent();
+                    EditText composedMessage = (EditText)view.findViewById(R.id.chat_message_send);
                     String username = "";
                     if(main.user.getNick() != null){
                         username = main.user.getNick();
                     }
-                    if(currentShout == null){
-                        Log.v("currentShout", "is null");
-                    }else if (currentShout.getChannel() == null){
-                        Log.v("channel", "is null");
-                    }
+                    Log.v("shout channel", currentShout.getChannel());
                     // main.fayeConnector.subscribeToChannel("/testi");
                     main.fayeConnector.publishToChannel(currentShout.getChannel(), composedMessage.getText().toString(), username);
                 }
             }
         });
+
+//        ImageView backArrowPic = (ImageView) ((View)view.getParent()).findViewById(R.id.back_arrow);
+
         if(swapVisibility){
             if(shoutFrame.getVisibility() == View.VISIBLE){
                 shoutFrame.setVisibility(View.GONE);
                 generalFrame.setVisibility(View.VISIBLE);
+                main.backArrow.setVisibility(View.GONE);
                 swapVisibility = false;
 
             }else{
                 shoutFrame.setVisibility(View.VISIBLE);
                 generalFrame.setVisibility(View.GONE);
+                main.backArrow.setVisibility(View.VISIBLE);
                 swapVisibility = false;
             }
         }
@@ -114,7 +117,7 @@ public class ShoutListFragment extends Fragment {
         joinedListView.setOnItemClickListener(new ListView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> adapter, View item, int position, long arg4){
-                Shout shout = main.shoutsAsShouts.get(position);
+                Shout shout = main.user.getJoinedShouts().get(position);
                 String channel = shout.getChannel();
                 setCurrentShout(shout, false);
                 //TODO: need to get show previous messages if any
@@ -123,10 +126,12 @@ public class ShoutListFragment extends Fragment {
                 //main.fayeConnector.subscribeToChannel(channel);
                // Log.v("shout", shout.getContent() + " " + shout.getId());
                // main.changeTab(shout);
-                Log.v("joined shout", "clickeddd");
+                Log.v("joined shout", shout.getChannel());
+                Log.v("joined shout", shout.getContent());
                 if(generalFrame.getVisibility() == View.VISIBLE) {
                     shoutFrame.setVisibility(View.VISIBLE);
                     generalFrame.setVisibility(View.GONE);
+                    main.backArrow.setVisibility(View.VISIBLE);
               //      String chosenShoutString = main.joinedShoutAsString.get(position);
   //                  ListView chatListView = (ListView)chatView.findViewById(R.id.chat_list);
    //                 chatListView.setAdapter(main.chatAdapter);
@@ -162,6 +167,7 @@ public class ShoutListFragment extends Fragment {
         currentShout = shout;
         main.chatMessages.clear();
         if(!justJoined){
+            Log.v("channel searched", shout.getChannel());
             if(main.user.getChannelnamesToChannels().containsKey(shout.getChannel())) {
                 FayeChannel channel = main.user.getChannelnamesToChannels().get(shout.getChannel());
                 for(int i = 0; i < channel.messages.size(); i++){
@@ -174,5 +180,6 @@ public class ShoutListFragment extends Fragment {
         main.chatAdapter.notifyDataSetChanged();
 
     }
+
 
 }

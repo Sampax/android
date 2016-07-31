@@ -10,7 +10,7 @@ public class Shout {
     private String owner;
     private String channel;
     private int id;
-    private FayeChannel fayeChannel;
+//    private FayeChannel fayeChannel;
 
     public Shout(String cont, String creat, double latit, double longi){
         content = cont;
@@ -85,11 +85,5 @@ public class Shout {
         this.lon = lon;
     }
 
-    public FayeChannel getFayeChannel() {
-        return fayeChannel;
-    }
 
-    public void setFayeChannel(FayeChannel fayeChannel) {
-        this.fayeChannel = fayeChannel;
-    }
 }

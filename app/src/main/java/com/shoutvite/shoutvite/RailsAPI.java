@@ -164,7 +164,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             String response = POST(query, url, user.getAuthToken());
             JSONObject responseJSON = new JSONObject(response);
             Log.v("post shout response:", response);
-            shout.setChannel(responseJSON.getString("shout_channel"));
+            shout.setChannel("/" + responseJSON.getString("shout_channel"));
             shout.setId(responseJSON.getInt("shout_id"));
             return shout;
         }catch(Exception e){
@@ -344,9 +344,6 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             case AsyncTaskPayload.GET_SHOUTS:
 
                 main.mapFrag.updateShoutsOnMap(payload.shoutList);
-                if(payload.shoutList.size() > 0) {
-                    Log.v("channel name: ", payload.shoutList.get(0).getChannel());
-                }
                 break;
             case AsyncTaskPayload.GET_SINGLE_SHOUT: //not implemented yet
                 Log.v("not yet implemented", "");

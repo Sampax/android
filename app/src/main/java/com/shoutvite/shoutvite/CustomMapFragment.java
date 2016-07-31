@@ -262,6 +262,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         main.shoutsAsShouts = shoutList;
         for(int i = 0; i < shoutList.size(); i++){
             Shout aux = shoutList.get(i);
+            Log.v("Bug content all: ", aux.getContent());
+            Log.v("Bug channel all: ", aux.getChannel());
             Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap).title(aux.getContent()).snippet("Click to join"));
             markersHashMap.put(newMarker, aux);
             shoutsHashMap.put(aux, newMarker);
@@ -271,8 +273,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 public void onInfoWindowClick(Marker marker){
                     Shout shout = markersHashMap.get(marker);
                     if(!main.user.getJoinedShouts().contains(shout)) {
-                        shout.setFayeChannel(new FayeChannel(shout.getChannel()));
                         main.user.addJoinedShout(shout);
+                        Log.v("Bug content: ", shout.getContent());
+                        Log.v("Bug channel: ", shout.getChannel());
                         main.shoutFrag.setCurrentShout(shout, true);
                         main.fayeConnector.subscribeToChannel(shout.getChannel());
                         main.shoutFrag.currentShout = shout;
@@ -332,7 +335,6 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void addNewShout(Shout shout){
-        shout.setFayeChannel(new FayeChannel(shout.getChannel()));
         main.user.addJoinedShout(shout);
         main.fayeConnector.subscribeToChannel(shout.getChannel());
         main.joinedShoutAdapter.notifyDataSetChanged();

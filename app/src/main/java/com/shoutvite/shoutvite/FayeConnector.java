@@ -57,7 +57,7 @@ public class FayeConnector{  //this or asynctask necessary?
                     HashMap<String, FayeChannel> map = main.user.getChannelnamesToChannels();
                     Object[] keyArray =  map.keySet().toArray();
                     for(int i = 0; i < keyArray.length; i++){
-                        Log.v("key value: " ,((String)keyArray[i]));
+                        Log.v("key value: " , ((String)keyArray[i]));
                     }
 
                     if(map.containsKey(channel)){
@@ -90,6 +90,7 @@ public class FayeConnector{  //this or asynctask necessary?
     }
 
     public void publishToChannel(String channel, String message, String user){
+        Log.v("publishing to: ", channel);
         if(client.isConnectedServer()){
             this.subscribeToChannel(channel);
             JSONObject JSONMessage = new JSONObject();
