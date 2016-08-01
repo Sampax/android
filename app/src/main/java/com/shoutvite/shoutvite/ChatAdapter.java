@@ -1,6 +1,7 @@
 package com.shoutvite.shoutvite;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +37,16 @@ public class ChatAdapter<String> extends ArrayAdapter<String> {
 
     @Override
     public int getItemViewType(int position){
-        if(position % 2 == 0 ){
-            return 1;
+        String str = data.get(position);
+        Log.v("message is", str.toString());
+        Log.v("letter is", "" + str.toString().charAt(str.toString().length() - 1));
+        if(str.toString().charAt(str.toString().length() - 1) == 'u'){
+
+            return OWN_MESSAGE;
+        }else if(str.toString().charAt(str.toString().length() - 1) == 'n') {
+            return MESSAGE_FROM_ANOTHER;
         }
+        Log.v("HolyShitWTFException", "WTF");
         return 0;
     }
 
@@ -77,8 +85,9 @@ public class ChatAdapter<String> extends ArrayAdapter<String> {
         }else{
             holder = (ViewHolder)view.getTag();
         }
-
-        holder.text.setText((CharSequence) data.get(i));
+        Log.v("toShow", data.get(i).toString());
+        java.lang.String stringToShow = data.get(i).toString().substring(0, data.get(i).toString().length() - 1);
+        holder.text.setText((CharSequence) stringToShow);
         return view;
     }
 

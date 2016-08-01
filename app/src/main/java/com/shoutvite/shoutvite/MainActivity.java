@@ -68,6 +68,7 @@ public class MainActivity extends FragmentActivity {
     public ChatAdapter<String> chatAdapter;
     public ArrayList<String> chatMessages;
 
+
     public FayeConnector fayeConnector;
 
     @Override

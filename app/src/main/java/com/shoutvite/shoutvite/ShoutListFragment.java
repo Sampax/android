@@ -155,18 +155,23 @@ public class ShoutListFragment extends Fragment {
         Log.v("hear", "hear");
     }
 
-
+//IMPORTANT: My brilliant hack adds a letter, either u(ser) or n(ot the user) after the message printed. The last letter need to be shaved off before printing
     public void updateChatIfNecessary(String channel, String message, String user){
         Log.v("current channel: ", currentShout.getChannel());
         Log.v("message channel: ", channel);
         if(currentShout.getChannel().equals(channel)){
             Log.v("what", "the hell?");
-            main.chatMessages.add(user + " says: \n" + message);
+            if(user.equals(main.user.getNick())) {
+                main.chatMessages.add(user + " says: \n" + message + "u");
+            }else{
+                main.chatMessages.add(user + " says: \n" + message + "n");
+            }
             //main.chatAdapter.notifyDataSetChanged();
             main.fayeConnector.doShit();
         }
     }
 
+//IMPORTANT: My brilliant hack adds a letter, either u(ser) or n(ot the user) after the message printed. The last letter need to be shaved off before printing
     public void setCurrentShout(Shout shout, boolean justJoined){
         currentShout = shout;
         main.chatMessages.clear();
@@ -175,7 +180,11 @@ public class ShoutListFragment extends Fragment {
             if(main.user.getChannelnamesToChannels().containsKey(shout.getChannel())) {
                 FayeChannel channel = main.user.getChannelnamesToChannels().get(shout.getChannel());
                 for(int i = 0; i < channel.messages.size(); i++){
-                    main.chatMessages.add(channel.messages.get(i).user + " says: \n" + channel.messages.get(i).message);
+                    if(channel.messages.get(i).user.equals(main.user.getNick())) {
+                        main.chatMessages.add(channel.messages.get(i).user + " says: \n" + channel.messages.get(i).message + "u");
+                    }else{
+                        main.chatMessages.add(channel.messages.get(i).user + " says: \n" + channel.messages.get(i).message + "n");
+                    }
                 }
             }else{
                 Log.v("Shit", "Does not contain channel");
