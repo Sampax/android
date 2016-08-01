@@ -1,6 +1,12 @@
 package com.shoutvite.shoutvite;
 
+import android.content.Context;
+import android.util.Log;
+
+import java.io.FileOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,6 +22,8 @@ public class User {
     private List<String> joinedShoutsAsStrings;
     private HashMap<String, FayeChannel> channelnamesToChannels;
     private boolean nullified = true;
+    MainActivity main;
+
 
 
     public boolean isNullified(){
@@ -27,8 +35,9 @@ public class User {
         this.nick = null;
         this.authToken = null;
         this.password = null;
-        joinedShouts = new ArrayList<Shout>();
-        joinedShoutsAsStrings = new ArrayList<String>();
+        joinedShouts.clear();
+        joinedShoutsAsStrings.clear();
+        Log.v("nullified", "user");
         channelnamesToChannels = new HashMap<String, FayeChannel>();
         this.nullified = true;
     }
@@ -59,6 +68,19 @@ public class User {
         joinedShoutsAsStrings.add(shout.getContent());
         FayeChannel fayeChannel = new FayeChannel(shout.getChannel());
         channelnamesToChannels.put(shout.getChannel(), fayeChannel);
+        //ArrayList<String> channelsAsList = new ArrayList<String>();
+        main.createFile(this, keysFromHashMap(channelnamesToChannels));
+
+    }
+
+    public List<String> keysFromHashMap(HashMap<String, FayeChannel> hashMap){
+        ArrayList<String> keys = new ArrayList<String>();
+        Object[] keysAsObjects = hashMap.keySet().toArray();
+        for(int i = 0; i < keysAsObjects.length; i++){
+            keys.add((String)keysAsObjects[i]);
+        }
+        return keys;
+
     }
 
     public String getEmail() {
@@ -119,4 +141,7 @@ public class User {
     public HashMap<String, FayeChannel> getChannelnamesToChannels() {
         return channelnamesToChannels;
     }
+
 }
+
+

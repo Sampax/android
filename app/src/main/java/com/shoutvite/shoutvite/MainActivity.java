@@ -1,5 +1,7 @@
 package com.shoutvite.shoutvite;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -19,6 +21,14 @@ import com.facebook.FacebookSdk;
 
 import com.facebook.appevents.AppEventsLogger;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +50,7 @@ public class MainActivity extends FragmentActivity {
 
     ArrayList<Integer> tabQueue = new ArrayList<Integer>();
     final User user = new User(null, null, null);      //only modify object, don't replace
+    private final String FILENAME = "user_profile";
 
     List<String> shouts;
     public ArrayAdapter<String> shoutAdapter;
@@ -50,6 +61,7 @@ public class MainActivity extends FragmentActivity {
     ImageView backArrow;
     boolean loaded = false;
 
+    boolean possibleConnectionFailureFlag = false;
   //  List<Shout> joinedShouts;
   //  List<String> joinedShoutAsString;
 
@@ -65,8 +77,13 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.activity_main);
         fayeConnector = new FayeConnector();
         fayeConnector.init(this);
+        user.main = this;
         backArrow = (ImageView)findViewById(R.id.back_arrow);
-
+        if(loadUser(user)){
+            Log.v("load", "success");
+        }else{
+            Log.v("load", "failure");
+        }
         // set different sized tabs: tabHost.getTabWidget().getChildAt(0).getLayoutParams().height = 35; OR
         // tabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams(width,height));
         tabHost = (FragmentTabHost) findViewById(R.id.tabHost);
@@ -184,7 +201,7 @@ public class MainActivity extends FragmentActivity {
 
 
     //changes to profile tab and launce login dialog
-    public void changeTab(){
+    public void changeTabToProfileAndLaunchLogin(){
         tabHost.setCurrentTab(PROFILETABINDEX);
         profileFrag.launchLoginDialog();
 
@@ -207,6 +224,111 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    public void createFile(User userToSave, List<String> channels){
+        FileOutputStream fos = null;
+        if(channels == null){
+            channels = new ArrayList<String>();
+        }
+        try {
+            fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            JSONObject userJSON = new JSONObject();
+            userJSON.put("username", userToSave.getNick());
+            userJSON.put("email", userToSave.getEmail());
+            userJSON.put("auth_token", userToSave.getAuthToken());
+            JSONArray channelsJSON = new JSONArray(channels);
+            userJSON.put("channels", channelsJSON);
+
+            Log.v("userJSONnnnn: ", userJSON.toString());
+            fos.write(userJSON.toString().getBytes());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
+            if(fos != null){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+    }
+
+    public String readUserFile(){
+        FileInputStream fis = null;
+        try {
+            String content = "";
+            int character;
+            fis = openFileInput(FILENAME);
+            character = fis.read();
+            while(character != -1){
+                content = content + (char)character;
+                character = fis.read();
+            }
+            Log.v("file", "content");
+            return content;
+        } catch (FileNotFoundException e) {
+            Log.v("file", "not found");
+            e.printStackTrace();
+            return null;
+        } catch (IOException e) {
+            Log.v("file", "io exception");
+            e.printStackTrace();
+            return null;
+        }finally{
+            if(fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    //needs to modify since main.user is final
+    public boolean loadUser(User newUser){
+        String fileContent = readUserFile();
+        Log.v("file content", fileContent);
+        if(fileContent != null){
+            try {
+                JSONObject userJSON = new JSONObject(fileContent);
+                newUser.setAuthToken(userJSON.getString("auth_token"));
+                newUser.setNick(userJSON.getString("username"));
+                newUser.setEmail(userJSON.getString("email"));
+                JSONArray channelJSON = userJSON.getJSONArray("channels");
+                for(int i = 0; i < channelJSON.length(); i++){
+                    String channelString = (String)channelJSON.get(i);
+                    Log.v("loaded channel: ",channelString );
+
+                }
+                return true;
+
+            } catch (JSONException e) {
+                Log.v("couldn not create", "user from JSON");
+                Log.v("JSON is: ", fileContent);
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public void launchNotification(int notificationCode){
+        NotificationDialogFragment.notification = notificationCode;
+        NotificationDialogFragment notificationDialog = new NotificationDialogFragment();
+        notificationDialog.show(getFragmentManager(), "login_failed_tag");
+        if(NotificationDialogFragment.LOGIN_EXPIRED == notificationCode){
+            user.nullyfyUser();
+            joinedShoutAdapter.notifyDataSetChanged();
+
+        }
+    }
 
 }
 

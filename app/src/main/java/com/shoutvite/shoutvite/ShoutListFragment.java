@@ -51,10 +51,14 @@ public class ShoutListFragment extends Fragment {
                 //Button button = (Button) v.findViewById(R.id.launch_button);
               //  button.setText("jeeeeeee");
                 if(!main.user.isNullified()) {
-                    ShoutDialogFragment newShoutDialog = new ShoutDialogFragment();
-                    newShoutDialog.show(getActivity().getSupportFragmentManager(), "tag_to_find_this_fragment");
+                    if(main.lastLocation != null) {
+                        ShoutDialogFragment newShoutDialog = new ShoutDialogFragment();
+                        newShoutDialog.show(getActivity().getSupportFragmentManager(), "tag_to_find_this_fragment");
+                    }else{
+                        main.launchNotification(NotificationDialogFragment.UNKNOWN_LOCATION);
+                    }
                 }else{
-                    main.changeTab();
+                    main.changeTabToProfileAndLaunchLogin();
                     //LoginDialogFragment loginDialog = new LoginDialogFragment();
                     //loginDialog.show(getActivity().getSupportFragmentManager(), "login dialog");
                 }

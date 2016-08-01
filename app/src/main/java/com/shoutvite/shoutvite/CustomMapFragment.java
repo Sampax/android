@@ -271,18 +271,23 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
                 @Override
                 public void onInfoWindowClick(Marker marker){
-                    Shout shout = markersHashMap.get(marker);
-                    if(!main.user.getJoinedShouts().contains(shout)) {
-                        main.user.addJoinedShout(shout);
-                        Log.v("Bug content: ", shout.getContent());
-                        Log.v("Bug channel: ", shout.getChannel());
-                        main.shoutFrag.setCurrentShout(shout, true);
-                        main.fayeConnector.subscribeToChannel(shout.getChannel());
-                        main.shoutFrag.currentShout = shout;
-                        main.joinedShoutAdapter.notifyDataSetChanged();
-                        main.changeTabToJoinedShout(shout);
-                    }
+                    if(main.user.isNullified()) {
+                        main.changeTabToProfileAndLaunchLogin();
+                    }else {
+
+                        Shout shout = markersHashMap.get(marker);
+                        if (!main.user.getJoinedShouts().contains(shout)) {
+                            main.user.addJoinedShout(shout);
+                            Log.v("Bug content: ", shout.getContent());
+                            Log.v("Bug channel: ", shout.getChannel());
+                            main.shoutFrag.setCurrentShout(shout, true);
+                            main.fayeConnector.subscribeToChannel(shout.getChannel());
+                            main.shoutFrag.currentShout = shout;
+                            main.joinedShoutAdapter.notifyDataSetChanged();
+                            main.changeTabToJoinedShout(shout);
+                        }
                         Log.v("info window", "clicked " + shout.getContent());
+                    }
                 }
             });
         }

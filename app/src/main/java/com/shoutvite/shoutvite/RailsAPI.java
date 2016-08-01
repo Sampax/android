@@ -15,8 +15,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.lang.ref.WeakReference;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,6 +74,22 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("POST message received: ", connection.getResponseMessage());
                 return null;
             }
+        }catch(UnknownHostException u) {  //no internet connection basically
+            //mainRef.get().possibleConnectionFailureFlag = true;
+            if(mainRef.get().possibleConnectionFailureFlag == false) {
+                mainRef.get().launchNotification(NotificationDialogFragment.UNKNOWN_HOST_EXCEPTION);
+                mainRef.get().possibleConnectionFailureFlag = true;
+            }
+
+            return null;
+        } catch(ConnectException u) {  //no internet connection basically
+            //mainRef.get().possibleConnectionFailureFlag = true;
+            if(mainRef.get().possibleConnectionFailureFlag == false) {
+                mainRef.get().launchNotification(NotificationDialogFragment.UNKNOWN_HOST_EXCEPTION);
+                mainRef.get().possibleConnectionFailureFlag = true;
+            }
+
+            return null;
         } catch (Exception e) {
             Log.v("POST error", e.toString());
         }finally{
@@ -110,6 +128,22 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("POST message received: ", connection.getResponseMessage());
                 return null;
             }
+        }catch(UnknownHostException u) {  //no internet connection basically
+            //mainRef.get().possibleConnectionFailureFlag = true;
+            if(mainRef.get().possibleConnectionFailureFlag == false) {
+                mainRef.get().launchNotification(NotificationDialogFragment.UNKNOWN_HOST_EXCEPTION);
+                mainRef.get().possibleConnectionFailureFlag = true;
+            }
+
+            return null;
+        } catch(ConnectException u) {  //no internet connection basically
+            //mainRef.get().possibleConnectionFailureFlag = true;
+            if(mainRef.get().possibleConnectionFailureFlag == false) {
+                mainRef.get().launchNotification(NotificationDialogFragment.UNKNOWN_HOST_EXCEPTION);
+                mainRef.get().possibleConnectionFailureFlag = true;
+            }
+
+            return null;
         } catch (Exception e) {
             Log.v("POST error", e.toString());
         }finally{
@@ -138,10 +172,27 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 message = message + letter;
             }
             return message;
+        }catch(UnknownHostException u) {  //no internet connection basically
+            //mainRef.get().possibleConnectionFailureFlag = true;
+            if(mainRef.get().possibleConnectionFailureFlag == false) {
+                mainRef.get().launchNotification(NotificationDialogFragment.UNKNOWN_HOST_EXCEPTION);
+                mainRef.get().possibleConnectionFailureFlag = true;
+            }
+
+            return null;
+        } catch(ConnectException u) {  //no internet connection basically
+            //mainRef.get().possibleConnectionFailureFlag = true;
+            if(mainRef.get().possibleConnectionFailureFlag == false) {
+                mainRef.get().launchNotification(NotificationDialogFragment.UNKNOWN_HOST_EXCEPTION);
+                mainRef.get().possibleConnectionFailureFlag = true;
+            }
+
+            return null;
         } catch (Exception e) {
             Log.v("Get", e.toString());
             return null;
-        }finally{
+        }finally
+        {
             if(connection != null){
                 connection.disconnect();
             }else{
@@ -184,6 +235,9 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
 
     public List<Shout> getShouts(double lat, double lon, int threshold) {
         String response = GET(actual_API_URL + "shouts?lon=" + lon + "&lat=" + lat + "&radius=" + threshold);
+        if(response == null){
+            return null;
+        }
         Log.v("json fields: ", response);
         List<Shout> shoutList = new ArrayList<Shout>();
         try {
@@ -276,7 +330,10 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         int id = payload.id;
         switch (payload.task){
             case AsyncTaskPayload.CREATE_USER:
-                payload.user = createUser(user.getNick(), user.getEmail(), user.getPassword());
+//                payload.user = createUser(user.getNick(), user.getEmail(), user.getPassword());
+                Log.v("username: ", "blob " + user.getNick());
+                Log.v("username: ", user.getEmail());
+                payload.user = createUser("uu", "jormakikkelsson@unfmail.com", "salasana");
                 Log.v("WTFException createuser", "should not come here from updating locationnn");
                 break;
             case AsyncTaskPayload.PUSH_SHOUT:
@@ -298,8 +355,10 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("WTFException", "should not come here from updating location");
                 break;
             case AsyncTaskPayload.LOGIN:
-                //payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
-                payload.user = login("marmar", "marmariini@jormail.com", "salasana");
+                payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
+     //           payload.user = login("uuu", "jorma@unfmail.com", "salasana");
+
+                //payload.user = login("marmar", "marmariini@jormail.com", "salasana");
                 Log.v("WTFException", "should not come here from updating location");
                 break;
             default:
@@ -323,12 +382,13 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     @Override
     public void onPostExecute(AsyncTaskPayload payload){
         if(payload == null){
-            Log.v("fug", "fug");
+            Log.v("fug", "fuggg");
         }
         MainActivity main = mainRef.get();
         switch (payload.task) {
             case AsyncTaskPayload.CREATE_USER:
                 if(payload.user != null) {
+                    main.createFile(payload.user, null);
                     main.setUser(payload.user);
                 }else{
                     Log.v("user creation", "failed");
@@ -338,12 +398,14 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 if(payload.shout != null){
                     main.mapFrag.addNewShout(payload.shout);
                 }else {
-                    Log.v("error", "in creating shout");
+                    Log.v("error", "in creating shouttt");
+                    main.launchNotification(NotificationDialogFragment.LOGIN_EXPIRED);
                 }
                 break;
             case AsyncTaskPayload.GET_SHOUTS:
-
-                main.mapFrag.updateShoutsOnMap(payload.shoutList);
+                if(payload.shoutList != null) {
+                    main.mapFrag.updateShoutsOnMap(payload.shoutList);
+                }
                 break;
             case AsyncTaskPayload.GET_SINGLE_SHOUT: //not implemented yet
                 Log.v("not yet implemented", "");
@@ -357,10 +419,12 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             case AsyncTaskPayload.LOGIN:
                 if(payload.user != null) {
                     main.setUser(payload.user);
+                    main.createFile(payload.user, null);
                     main.user.setNick("TEST_USER_REMOVE_FROM_RAILSAPI_CLASS_LATER");
                     Log.v("WTFException", "should not come here from updating location");
                 }else{
-                    Log.v("login", "failed");
+                    main.launchNotification(NotificationDialogFragment.LOGIN_FAILED);
+                    Log.v("login", "faileddd");
                 }
                 break;
             default:

@@ -107,8 +107,8 @@ public class ProfileTabFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.v("clickattu", "log out");
-                hasUserUpdateUI(false);
                 main.user.nullyfyUser(); //same as creating a new user with null values (still creates new joinedshoutlists)
+                hasUserUpdateUI(false);
             }
         });
 
@@ -138,6 +138,8 @@ public class ProfileTabFragment extends Fragment {
             ((Button) getView().findViewById(R.id.custom_logout_button)).setVisibility(View.GONE);
             ((Button) getView().findViewById(R.id.custom_login_button)).setVisibility(View.VISIBLE);
             userText.setText("");
+            main.joinedShoutAdapter.notifyDataSetChanged();
+            Log.v("nullified", "joined shouts updated");
 
         }
         ;
