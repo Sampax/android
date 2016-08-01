@@ -65,8 +65,8 @@ public class MainActivity extends FragmentActivity {
   //  List<Shout> joinedShouts;
   //  List<String> joinedShoutAsString;
 
-    public ArrayAdapter<String> chatAdapter;
-    public List<String> chatMessages;
+    public ChatAdapter<String> chatAdapter;
+    public ArrayList<String> chatMessages;
 
     public FayeConnector fayeConnector;
 
@@ -132,7 +132,7 @@ public class MainActivity extends FragmentActivity {
 
         chatMessages = new ArrayList<String>();
 
-        chatAdapter = new ArrayAdapter<String>(this, R.layout.shout, R.id.shout_text, chatMessages);
+        chatAdapter = new ChatAdapter<String>(this, R.layout.chat_layout, R.id.chat_text, chatMessages);
 
         //   mapFrag = (CustomMapFragment) getSupportFragmentManager().findFragmentBy;
         //   mapFrag.updateShoutsOnMap(null);
