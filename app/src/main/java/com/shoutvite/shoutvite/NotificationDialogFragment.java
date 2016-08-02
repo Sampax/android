@@ -38,6 +38,8 @@ public class NotificationDialogFragment extends DialogFragment{
             case UNKNOWN_HOST_EXCEPTION:
                 builder.setView(inflater.inflate(R.layout.unknown_host_exception_notification_layout, null));
                 break;
+            case PERMISSION_DENIED:
+                builder.setView(inflater.inflate(R.layout.permission_denied_notification, null));
         }
         main = (MainActivity) getActivity();
         builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {

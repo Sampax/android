@@ -29,7 +29,7 @@ public class LoginDialogFragment extends DialogFragment {
                 userText = (EditText) ((AlertDialog) dialog).findViewById(R.id.login_password);
                 String password = userText.getText().toString();
 //TODO: login needs to return username
-                User user = new User(username + "@jormail.com", null, null, password);
+                User user = new User(username, null, null, password);
                 AsyncTaskPayload payload = AsyncTaskPayload.createLoginPayload(user);
 
                 new RailsAPI(main).execute(payload);

@@ -332,10 +332,12 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         int id = payload.id;
         switch (payload.task){
             case AsyncTaskPayload.CREATE_USER:
-//                payload.user = createUser(user.getNick(), user.getEmail(), user.getPassword());
+                payload.user = createUser(user.getNick(), user.getEmail(), user.getPassword());
                 Log.v("username: ", "blob " + user.getNick());
                 Log.v("username: ", user.getEmail());
-                payload.user = createUser("uu", "jormakikkelsson@unffmail.com", "salasana");
+                Log.v("user creation", user.getNick() + user.getEmail() + user.getPassword());
+
+                //             payload.user = createUser("uu", "jormakikkelsson@unffmail.com", "salasana");
                 Log.v("WTFException createuser", "should not come here from updating locationnn");
                 break;
             case AsyncTaskPayload.PUSH_SHOUT:
@@ -357,8 +359,10 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("WTFException", "should not come here from updating location");
                 break;
             case AsyncTaskPayload.LOGIN:
-     //           payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
-                payload.user = login("uuu", "jorma@unfmail.com", "salasana");
+                payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
+                Log.v("user login", user.getNick() + user.getEmail() + user.getPassword());
+
+                //           payload.user = login("uuu", "jorma@unfmail.com", "salasana");
 
                 //payload.user = login("marmar", "marmariini@jormail.com", "salasana");
                 Log.v("WTFException", "should not come here from updating location");
@@ -422,7 +426,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 if(payload.user != null) {
                     main.setUser(payload.user);
                     main.createFile(payload.user, null);
-                    main.user.setNick("TEST_USER_REMOVE_FROM_RAILSAPI_CLASS_LATER");
+                 //   main.user.setNick("TEST_USER_REMOVE_FROM_RAILSAPI_CLASS_LATER");
                     Log.v("WTFException", "should not come here from updating location");
                 }else{
                     main.launchNotification(NotificationDialogFragment.LOGIN_FAILED);

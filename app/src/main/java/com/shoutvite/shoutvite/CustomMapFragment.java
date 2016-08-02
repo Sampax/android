@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     Map<Marker, Shout> markersHashMap;
     Map<Shout, Marker> shoutsHashMap;
     boolean cameFromShoutList = false;
+    int scale = 100;
 
     @Override
     public void onCreate(Bundle savedStateInstance) {
@@ -68,8 +70,11 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 //        ((MainActivity)getActivity()).mapFrag.updateShoutsOnMap(null);
         Log.v("Here", "map");
         main.changeTab(1);
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
+        }
 
-    }
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedStateInstance) {
@@ -88,6 +93,11 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 .findFragmentById(R.id.gmap);
         mapFragment.getMapAsync(this);
         bmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        DisplayMetrics display = new DisplayMetrics();
+        main.getWindowManager().getDefaultDisplay().getMetrics(display);
+        int screenWidth = display.widthPixels;
+        int screenHeight = display.heightPixels;
+
         bmap = Bitmap.createScaledBitmap(bmap, 100, 100, false);        //[TODO]should scale depending on screen size
 
         bitmap = BitmapDescriptorFactory.fromResource(R.drawable.logo);
@@ -116,7 +126,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-    //    googleMap.addMarker(new MarkerOptions().position(new LatLng(61, 40)).title("own_location"));
+        //    googleMap.addMarker(new MarkerOptions().position(new LatLng(61, 40)).title("own_location"));
         LatLng initLocation = getInitialLocation();
         CameraPosition pos = null;
         double FIN_LAT = 64.9241;
@@ -131,14 +141,14 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         if (googleMap != null) {
             if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
-                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
+                //requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
                 //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
                 //                                          int[] grantResults)
                 // to handle the case where the user grants the permission. See the documentation
                 // for ActivityCompat#requestPermissions for more details.
-                Log.v("missing", "yes it issss");
+                Log.v("missing", "yes it isssss");
             } else {  //if already have permissions
                 googleMap.setMyLocationEnabled(true);   //adds the marker for user position
             }
@@ -210,7 +220,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
+            //requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -237,7 +247,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         String provider = locationManager.getBestProvider(crit, true);
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
+            //requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -328,17 +338,22 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         Log.v("permission", "here");
         switch (requestCode) {//TODO: actually handle both cases
             case MY_LOCATION_ACCESS:
-                Log.d("location", "lupa saatu");
-                if (map != null) {
-                    try {
-                        map.setMyLocationEnabled(true);
-                    } catch (SecurityException e) {
-                        Log.v("permission error", "no permission yet"); //should never occur
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) { //permission granted
+                    Log.d("location", "lupa saatu");
+                    if (map != null) {
+                        try {
+                            map.setMyLocationEnabled(true);
+                        } catch (SecurityException e) {
+                            Log.v("permission error", "no permission yet"); //should never occur
+                        }
                     }
+                }else{
+                    main.launchNotification(NotificationDialogFragment.PERMISSION_DENIED);
                 }
+
                 break;
             default:
-                Log.d("location", "lupa evätty");
+                Log.d("loc wtfException", "different permission");
                 main.launchNotification(NotificationDialogFragment.PERMISSION_DENIED);
 
         }

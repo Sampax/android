@@ -40,6 +40,8 @@ Issues:
 - wrong pictures in several places
 - asks for permission multiple times
 - doesn't handle negative permission result correctly
+- need notification if user creation fails
+- log out doesn't yet overwrite user file
 
 
 
@@ -125,6 +127,7 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
+
         shouts = new ArrayList<String>();
         shoutAdapter = new ArrayAdapter<String>(this, R.layout.shout, R.id.shout_text, shouts){
             @Override
@@ -158,7 +161,7 @@ public class MainActivity extends FragmentActivity {
 
 
     public void testShoutButton(String shoutContent) {
-        Log.v("postaaaattuuuu", shoutContent);
+        Log.v("postaaaattuuuuuuu", shoutContent);
     }
 
 
@@ -326,7 +329,7 @@ public class MainActivity extends FragmentActivity {
                 return true;
 
             } catch (JSONException e) {
-                Log.v("couldn not create", "user from JSON");
+                Log.v("couldn not create", "user from JSONnn");
                 Log.v("JSON is: ", fileContent);
                 e.printStackTrace();
                 return false;
