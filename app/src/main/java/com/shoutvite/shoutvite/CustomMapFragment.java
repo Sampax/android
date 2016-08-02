@@ -1,4 +1,5 @@
 package com.shoutvite.shoutvite;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -60,9 +61,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     boolean cameFromShoutList = false;
 
     @Override
-    public void onCreate(Bundle savedStateInstance){
+    public void onCreate(Bundle savedStateInstance) {
         super.onCreate(savedStateInstance);
-        main = (MainActivity)getActivity();
+        main = (MainActivity) getActivity();
         main.mapFrag = this;   //to get a handle for this fragment, holy shit the hardest thing ever
 //        ((MainActivity)getActivity()).mapFrag.updateShoutsOnMap(null);
         Log.v("Here", "map");
@@ -71,14 +72,14 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedStateInstance){
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedStateInstance) {
         //need to get rid of the old view from the parent before inflating a new one
-        if(view != null && this.previousContainer == container ){
+        if (view != null && this.previousContainer == container) {
             ViewGroup parent = (ViewGroup) view.getParent();
-            if(parent != null){
+            if (parent != null) {
                 parent.removeView(view);
             }
-        }else{
+        } else {
             view = inflater.inflate(R.layout.map_layout, container, false);
             previousContainer = container;
         }
@@ -94,9 +95,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         //custom adapter to access textView because android is a piece of shit software that should be exterminated
         FrameLayout frame1 = (FrameLayout) view.findViewById(R.id.frame1);
         FrameLayout frame2 = (FrameLayout) view.findViewById(R.id.frame2);
-        if(frame1.getVisibility() == View.VISIBLE) {
+        if (frame1.getVisibility() == View.VISIBLE) {
             frame2.setVisibility(View.GONE);
-        }else{
+        } else {
             frame2.setVisibility(View.VISIBLE);
         }
         ArrayList<String> single_shouts = new ArrayList<String>();
@@ -105,17 +106,17 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         single_shouts.add("näyttäilknkns");
         single_shouts.add("toimivan");
         ArrayAdapter<String> convoAdapter = new ArrayAdapter<String>(getActivity(), R.layout.single_shoutl, R.id.single_shout_text, single_shouts);
-        ListView shoutConvo = (ListView)frame2.findViewById(R.id.shout_convo_list);
+        ListView shoutConvo = (ListView) frame2.findViewById(R.id.shout_convo_list);
         shoutConvo.setAdapter(convoAdapter);
         // FrameLayout testi = (FrameLayout)view.findViewById(R.id.frame1);
-       // testi.setVisibility(View.GONE);
+        // testi.setVisibility(View.GONE);
         return view;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(61, 40)).title("own_location"));
+    //    googleMap.addMarker(new MarkerOptions().position(new LatLng(61, 40)).title("own_location"));
         LatLng initLocation = getInitialLocation();
         CameraPosition pos = null;
         double FIN_LAT = 64.9241;
@@ -127,11 +128,24 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             zoom = 4;
         }
         //TODO: crashes if there's not yet permission to use location information, move elsewhere or check for permission
-        if(googleMap != null) {
-            googleMap.setMyLocationEnabled(true);   //adds the marker for user position
+        if (googleMap != null) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                Log.v("missing", "yes it issss");
+            } else {  //if already have permissions
+                googleMap.setMyLocationEnabled(true);   //adds the marker for user position
+            }
+
         }
         pos = new CameraPosition(initLocation, zoom, 0, 0);
-        if(!cameFromShoutList) {
+        if (!cameFromShoutList) {
             googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
             cameFromShoutList = false;
         }
@@ -152,29 +166,29 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 //TODO: crashes when re-launching the app (at least after modifications, apparently pointer to activity is null
 //                ((MainActivity)getActivity()).API = new MockAPI(location);
                 //TODO: check if safe, also consider refactoring location elsewhere (myLocation class?):
-                if(main == null){
+                if (main == null) {
                     Log.v("fug", "nöy");
                 }
                 main.lastLocation = location;
 
                 LatLng latlon = new LatLng(lat, lon);
-                CameraPosition pos = new CameraPosition(latlon, ZOOM_LEVEL, 0,0);
+                CameraPosition pos = new CameraPosition(latlon, ZOOM_LEVEL, 0, 0);
                 map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
                 Log.v("location update", "updated location 2");
                 AsyncTaskPayload payload = AsyncTaskPayload.getShoutsPayload(lat, lon, DISTANCE_THRESHOLD);
                 new RailsAPI(main).execute(payload);
 
- //               APIConnector api = ((MainActivity) getActivity()).API;
-              //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
+                //               APIConnector api = ((MainActivity) getActivity()).API;
+                //  List<Location> locations =  api.getNearbyShouts(location, DISTANCE_THRESHOLD);
                 //[TODO: add Markeroptions.archor() if necessary to center markers (check if markers are centered]
-           //     Log.v("markers", "locations koko: "+ locations.size());
-           //     for(int i = 0; i < locations.size(); i++){
-           //         Location aux = locations.get(i);
+                //     Log.v("markers", "locations koko: "+ locations.size());
+                //     for(int i = 0; i < locations.size(); i++){
+                //         Location aux = locations.get(i);
 
 
-         //          map.addMarker(new MarkerOptions().position(new LatLng(aux.getLatitude(), aux.getLongitude())).icon(bitmap)); //adds these eeeeevery time
-           //         Log.v("markers", "added " + i);
-            //    }
+                //          map.addMarker(new MarkerOptions().position(new LatLng(aux.getLatitude(), aux.getLongitude())).icon(bitmap)); //adds these eeeeevery time
+                //         Log.v("markers", "added " + i);
+                //    }
             }
 
             @Override
@@ -196,7 +210,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -210,12 +224,12 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, listener);     //  test:  String provider = locationManager.getProviders(true).get(0);
         //get all providers to find one that works... I'm sure this is very unefficient
         boolean print = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        if(print) {
-            Log.v("providers","network");
+        if (print) {
+            Log.v("providers", "network");
         }
         print = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if(print) {
-            Log.v("providers","gps");
+        if (print) {
+            Log.v("providers", "gps");
         }
         List<String> providers = locationManager.getProviders(crit, true);
 //        mock.shutdown();
@@ -223,7 +237,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         String provider = locationManager.getBestProvider(crit, true);
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -234,16 +248,16 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             return null;
         }
         Location loc = locationManager.getLastKnownLocation(provider);
-        if(loc == null){
-            for(int i = 0; i < providers.size(); i++){  //takes only the first that works, could search for better
+        if (loc == null) {
+            for (int i = 0; i < providers.size(); i++) {  //takes only the first that works, could search for better
                 loc = locationManager.getLastKnownLocation(providers.get(i));
-                if(loc != null){
+                if (loc != null) {
                     Log.v("works", "yaaaay");
                     break;
                 }
             }
         }
-        if(loc == null){
+        if (loc == null) {
             return null;
         }
         double lati = loc.getLatitude();
@@ -253,14 +267,14 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         return new LatLng(lat, lon);
     }
 
-    public void updateShoutsOnMap(List<Shout> shoutList){
+    public void updateShoutsOnMap(List<Shout> shoutList) {
         Log.v("jeeeeeeeeeeeeeeeeee", "toimii");
         main.shouts.clear();
         map.clear();
         markersHashMap = new HashMap<Marker, Shout>();
         shoutsHashMap = new HashMap<Shout, Marker>();
         main.shoutsAsShouts = shoutList;
-        for(int i = 0; i < shoutList.size(); i++){
+        for (int i = 0; i < shoutList.size(); i++) {
             Shout aux = shoutList.get(i);
             Log.v("Bug content all: ", aux.getContent());
             Log.v("Bug channel all: ", aux.getChannel());
@@ -268,12 +282,12 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             markersHashMap.put(newMarker, aux);
             shoutsHashMap.put(aux, newMarker);
             main.shouts.add(aux.getContent());
-            map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener(){
+            map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
-                public void onInfoWindowClick(Marker marker){
-                    if(main.user.isNullified()) {
+                public void onInfoWindowClick(Marker marker) {
+                    if (main.user.isNullified()) {
                         main.changeTabToProfileAndLaunchLogin();
-                    }else {
+                    } else {
 
                         Shout shout = markersHashMap.get(marker);
                         if (!main.user.getJoinedShouts().contains(shout)) {
@@ -311,35 +325,38 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
-        switch(requestCode) {//TODO: actually handle both cases
+        Log.v("permission", "here");
+        switch (requestCode) {//TODO: actually handle both cases
             case MY_LOCATION_ACCESS:
                 Log.d("location", "lupa saatu");
-                if(map != null) {
+                if (map != null) {
                     try {
                         map.setMyLocationEnabled(true);
-                    }catch(SecurityException e){
+                    } catch (SecurityException e) {
                         Log.v("permission error", "no permission yet"); //should never occur
                     }
                 }
+                break;
             default:
                 Log.d("location", "lupa evätty");
+                main.launchNotification(NotificationDialogFragment.PERMISSION_DENIED);
 
         }
 
     }
 
-    public void zoomToShout(Shout shout){
+    public void zoomToShout(Shout shout) {
         Marker mapMarker = shoutsHashMap.get(shout);
         LatLng position = mapMarker.getPosition();
-        Log.v("marker position", ""+position.latitude);
+        Log.v("marker position", "" + position.latitude);
         cameFromShoutList = true;
-        CameraPosition pos = new CameraPosition(position, ZOOM_LEVEL, 0,0);
+        CameraPosition pos = new CameraPosition(position, ZOOM_LEVEL, 0, 0);
         mapMarker.showInfoWindow();
         map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
     }
 
 
-    public void addNewShout(Shout shout){
+    public void addNewShout(Shout shout) {
         main.user.addJoinedShout(shout);
         main.fayeConnector.subscribeToChannel(shout.getChannel());
         main.joinedShoutAdapter.notifyDataSetChanged();

@@ -17,6 +17,7 @@ public class NotificationDialogFragment extends DialogFragment{
     public static final int LOGIN_EXPIRED = 1;
     public static final int UNKNOWN_LOCATION = 2;
     public static final int UNKNOWN_HOST_EXCEPTION = 3;
+    public static final int PERMISSION_DENIED = 4;
 
     public static int notification = 0;
 

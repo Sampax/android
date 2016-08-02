@@ -20,16 +20,28 @@ public class FayeConnector{  //this or asynctask necessary?
     MainActivity main;
     MetaMessage metaMessage;
     FayeClient client;
-    String fayeURL = "ws://52.178.223.135/shout/";
+    String fayeURL_DEV = "ws://52.178.223.135/shout/";
+    String fayeURL_launch = "ws://52.164.249.127/shout/";
+    String fayeURL = fayeURL_launch;
+    String toimiva_testi_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMiwiY2hhbm5lbCI6Ii9rYW5hdmEiLCJleHAiOjE0NzIxNjY1MDZ9.LsgMajIckfQ6vNvFT71Fwwv4MulMdh1gD8p7lHfmUqY";
 
     public void init(MainActivity mainActivity){
         main = mainActivity;
         metaMessage = new MetaMessage();
+        JSONObject jsonExt = new JSONObject();
+
+        try {
+            Log.v("User auth token", main.user.getAuthToken());
+            jsonExt.put("authToken", main.user.getAuthToken());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        metaMessage.setAllExt(jsonExt.toString());
         client = new FayeClient(fayeURL, metaMessage);
         client.setListener(new FayeClientListener() {
             @Override
             public void onConnectedServer(FayeClient fc) {
-                Log.v("Faye", "connected now");
+                Log.v("Faye", "connected nowwwwww");
 //                client.subscribeChannel("/testi");
 //                client.publish("/testi", "jee");
                 //user, channel, message
@@ -69,8 +81,8 @@ public class FayeConnector{  //this or asynctask necessary?
                     }
 
                 }catch (JSONException e){
-                    Log.v("onreceived message", e.toString());
-                    Log.v("onreceived message", msg);
+                    Log.v("onreceived messageeeee", e.toString());
+                    Log.v("onreceived messageeee", msg);
                 }
 
             }

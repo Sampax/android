@@ -99,7 +99,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="8">
+                android:layout_weight="9"
+                android:background="@drawable/backround1">
 
                 <ListView
                     android:id="@+id/chat_list"
@@ -109,21 +110,28 @@
                 </ListView>
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/chat_message_send"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/blue_background"
-                android:text="perse" />
+                android:orientation="horizontal"
+                android:weightSum="10">
 
-            <Button
-                android:id="@+id/chat_message_send_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="Send" />
+                <EditText
+                    android:id="@+id/chat_message_send"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="8"
+                    android:background="@drawable/blue_background"
+                    android:text="perse" />
 
+                <Button
+                    android:id="@+id/chat_message_send_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="Send" />
+            </LinearLayout>
         </LinearLayout>
 
     </FrameLayout>

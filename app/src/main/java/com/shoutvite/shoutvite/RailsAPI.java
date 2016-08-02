@@ -29,8 +29,10 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
 
 
     WeakReference<MainActivity> mainRef;    //to access UI from this non-UI thread
-    String API_URL = "http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
-    String actual_API_URL = "http://api.shoutvite.com/v1/";
+//    String API_URL = "http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
+    String API_URL_dev = "http://api.shoutvite.com/v1/";
+    String API_URL_launch = "http://api.shoutvite.me/v1/";
+    String API_URL = API_URL_launch;//"http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
 
 
     public RailsAPI(MainActivity main){
@@ -211,7 +213,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             query.put("lat", lat);
             query.put("lon", lon);
             query.put("creator", shout.getOwner());
-            String url = actual_API_URL + "shouts";
+            String url = API_URL + "shouts";
             String response = POST(query, url, user.getAuthToken());
             JSONObject responseJSON = new JSONObject(response);
             Log.v("post shout response:", response);
@@ -234,7 +236,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     }
 
     public List<Shout> getShouts(double lat, double lon, int threshold) {
-        String response = GET(actual_API_URL + "shouts?lon=" + lon + "&lat=" + lat + "&radius=" + threshold);
+        String response = GET(API_URL + "shouts?lon=" + lon + "&lat=" + lat + "&radius=" + threshold);
         if(response == null){
             return null;
         }
@@ -273,7 +275,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             user.put("username", name);
             user.put("email", email);
             user.put("password", password);
-            String url = actual_API_URL + "users";
+            String url = API_URL + "users";
             String response = POST(user, url);
             if(response == null){
                 return null;
@@ -296,7 +298,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
         try {
             user.put("email", email);
             user.put("password", password);
-            String url = actual_API_URL + "login";
+            String url = API_URL + "login";
             String response = POST(user, url);
             if(response == null){
                 return null;
@@ -320,7 +322,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     protected AsyncTaskPayload doInBackground(AsyncTaskPayload[] payloads) {
         AsyncTaskPayload payload = (AsyncTaskPayload)payloads[0];
         if(payload == null){
-            Log.v("aiempi fug", "fugfug");
+            Log.v("aiempi fug", "fugfugg");
         }
         User user = payload.user;
         Shout shout = payload.shout;
@@ -333,7 +335,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
 //                payload.user = createUser(user.getNick(), user.getEmail(), user.getPassword());
                 Log.v("username: ", "blob " + user.getNick());
                 Log.v("username: ", user.getEmail());
-                payload.user = createUser("uu", "jormakikkelsson@unfmail.com", "salasana");
+                payload.user = createUser("uu", "jormakikkelsson@unffmail.com", "salasana");
                 Log.v("WTFException createuser", "should not come here from updating locationnn");
                 break;
             case AsyncTaskPayload.PUSH_SHOUT:
@@ -355,8 +357,8 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("WTFException", "should not come here from updating location");
                 break;
             case AsyncTaskPayload.LOGIN:
-                payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
-     //           payload.user = login("uuu", "jorma@unfmail.com", "salasana");
+     //           payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
+                payload.user = login("uuu", "jorma@unfmail.com", "salasana");
 
                 //payload.user = login("marmar", "marmariini@jormail.com", "salasana");
                 Log.v("WTFException", "should not come here from updating location");
@@ -424,7 +426,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                     Log.v("WTFException", "should not come here from updating location");
                 }else{
                     main.launchNotification(NotificationDialogFragment.LOGIN_FAILED);
-                    Log.v("login", "faileddd");
+                    Log.v("login", "faileddddd");
                 }
                 break;
             default:

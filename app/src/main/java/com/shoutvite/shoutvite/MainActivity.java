@@ -32,6 +32,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+Issues:
+- Faye server only connects at startup: should probably try to reconnect on disconnect
+- Faye can't handle expired auth tokens -->  messages don't go through and no notification
+- pictures don't scale properly on multiple devices with different resolutions
+- wrong pictures in several places
+- asks for permission multiple times
+- doesn't handle negative permission result correctly
+
+
+
+ */
+
 
 public class MainActivity extends FragmentActivity {
     RailsAPI API;
@@ -77,11 +90,11 @@ public class MainActivity extends FragmentActivity {
   //      FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_main);
         fayeConnector = new FayeConnector();
-        fayeConnector.init(this);
         user.main = this;
         backArrow = (ImageView)findViewById(R.id.back_arrow);
         if(loadUser(user)){
             Log.v("load", "success");
+            fayeConnector.init(this);
         }else{
             Log.v("load", "failure");
         }
@@ -91,7 +104,8 @@ public class MainActivity extends FragmentActivity {
         tabHost.setup(this, getSupportFragmentManager(), android.R.id.tabcontent);
         View logoView = LayoutInflater.from(this).inflate(R.layout.logo_view, null);
         tabHost.addTab(tabHost.newTabSpec("map frag").setIndicator("Map"), CustomMapFragment.class, null);
-        tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator(logoView), ShoutListFragment.class, null);
+        tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator("Shouts"), ShoutListFragment.class, null);
+//  this instead to get the logo into tab       tabHost.addTab(tabHost.newTabSpec("shout frag").setIndicator(logoView), ShoutListFragment.class, null);
         tabHost.addTab(tabHost.newTabSpec("profile frag").setIndicator("Profile"), ProfileTabFragment.class, null);
         //[TODO: different sizes for different devices]:
         changeTab(0);
@@ -144,7 +158,7 @@ public class MainActivity extends FragmentActivity {
 
 
     public void testShoutButton(String shoutContent) {
-        Log.v("postaaaattuuu", shoutContent);
+        Log.v("postaaaattuuuu", shoutContent);
     }
 
 
@@ -191,6 +205,7 @@ public class MainActivity extends FragmentActivity {
         }
         profileFrag.hasUserUpdateUI(true);
         Log.v("uusi käyttäjääää:", user.getAuthToken());
+        fayeConnector.init(this);
     }
 
     //changes tab to map tab and focuses on a certain tab
@@ -295,8 +310,8 @@ public class MainActivity extends FragmentActivity {
     //needs to modify since main.user is final
     public boolean loadUser(User newUser){
         String fileContent = readUserFile();
-        Log.v("file content", fileContent);
         if(fileContent != null){
+            Log.v("file content", fileContent);
             try {
                 JSONObject userJSON = new JSONObject(fileContent);
                 newUser.setAuthToken(userJSON.getString("auth_token"));

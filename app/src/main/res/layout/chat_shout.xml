@@ -13,7 +13,6 @@
         android:textStyle="bold"
         android:textAlignment="gravity"
         android:layout_gravity="left"
-
         >
 
     </TextView>
