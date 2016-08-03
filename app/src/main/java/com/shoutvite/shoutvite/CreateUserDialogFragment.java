@@ -33,7 +33,10 @@ public class CreateUserDialogFragment extends DialogFragment {
                 String username = userText.getText().toString();
                 userText = (EditText)((AlertDialog) dialog).findViewById(R.id.email);
                 String email = userText.getText().toString();
-                User user = new User(email, username, null, "salasana");
+                userText = (EditText)((AlertDialog) dialog).findViewById(R.id.password);
+                String password = userText.getText().toString();
+
+                User user = new User(email, username, null, password);
                 AsyncTaskPayload payload = AsyncTaskPayload.createUserPayload(user);
 
                 new RailsAPI(main).execute(payload);

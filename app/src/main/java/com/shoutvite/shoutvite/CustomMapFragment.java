@@ -60,7 +60,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     Map<Marker, Shout> markersHashMap;
     Map<Shout, Marker> shoutsHashMap;
     boolean cameFromShoutList = false;
-    int scale = 100;
+    int scale = 120;
     boolean permissionAnswer = false;
     boolean firstmove = true;
     float LOCATION_UPDATE_MIN_DIST = 25; //meters
@@ -99,7 +99,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.gmap);
         mapFragment.getMapAsync(this);
-        bmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        //bmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
+        bmap = BitmapFactory.decodeResource(getResources(), R.drawable.sos);
         DisplayMetrics display = new DisplayMetrics();
         main.getWindowManager().getDefaultDisplay().getMetrics(display);
         int screenWidth = display.widthPixels;
@@ -110,8 +111,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         //windowsize w: 1080
         double heightProportion = (double) screenHeight / 1794;
         double widthProportion = (double) screenWidth / 1080;
-        int width = (int) Math.round(100 * widthProportion);
-        int height = (int) Math.round(100 * heightProportion);
+        int width = (int) Math.round(scale * widthProportion);
+        int height = (int) Math.round(scale * heightProportion);
         bmap = Bitmap.createScaledBitmap(bmap, width, height, false);        //[TODO]should scale depending on screen size
         bitmap = BitmapDescriptorFactory.fromResource(R.drawable.logo);
         bitmap = BitmapDescriptorFactory.fromBitmap(bmap);

@@ -53,6 +53,8 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     }
 
     public String POST(JSONObject json, String APIURL) {
+        Log.v("saatana", json.toString());
+
         HttpURLConnection connection = null;
         try {
             URL url = new URL(APIURL);
@@ -69,7 +71,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             writer.flush();
             writer.close();
             os.close();
-            if (connection.getResponseCode() == 200) {
+            if (connection.getResponseCode() == 200  | connection.getResponseCode() == 201) {
                 return readHttpResponse(connection);
             } else {
                 Log.v("POST response code", ""+ connection.getResponseCode());
@@ -108,6 +110,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     public String POST(JSONObject json, String APIURL, String authToken) {
         HttpURLConnection connection = null;
         try {
+            Log.v("saatana", json.toString());
             URL url = new URL(APIURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("Authorization", authToken);
@@ -123,7 +126,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             writer.flush();
             writer.close();
             os.close();
-            if (connection.getResponseCode() == 200) {
+            if (connection.getResponseCode() == 200 | connection.getResponseCode() == 201 ) {
                 return readHttpResponse(connection);
             } else {
                 Log.v("POST response code", ""+ connection.getResponseCode());
@@ -280,11 +283,13 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             if(response == null){
                 return null;
             }
-//            Log.v("POST response", response);
+            Log.v("POST response", response);
             JSONObject JResponse = new JSONObject(response);
             String authToken = JResponse.getString("auth_token");
+            int user_id = JResponse.getInt("user_id");
             Log.v("auth token", authToken);
             User newUser = new User(email, name, authToken, null);
+            newUser.setUser_id(user_id);
             return newUser;
         }catch(Exception e){
             Log.v("JSON", "JSON error" + e.toString());
@@ -299,6 +304,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             user.put("email", email);
             user.put("password", password);
             String url = API_URL + "login";
+            Log.v("login", user.toString());
             String response = POST(user, url);
             if(response == null){
                 Log.v("POST response", "is null");
@@ -307,8 +313,10 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             Log.v("POST response", response);
             JSONObject JResponse = new JSONObject(response);
             Log.v("login response: ", JResponse.toString());
+
             String authToken = JResponse.getString("auth_token");
             String username = JResponse.getString("username");
+
             int user_id  = JResponse.getInt("user_id");
             Log.v("auth token", authToken);
             User newUser = new User(email, username, authToken, null);
@@ -345,6 +353,9 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 Log.v("WTFException createuser", "should not come here from updating locationnn");
                 break;
             case AsyncTaskPayload.PUSH_SHOUT:
+                Log.v("push", shout.getContent());
+                Log.v("push", user.getAuthToken());
+                Log.v("push", user.getEmail());
                 payload.shout = pushShout(shout, user);
                 Log.v("WTFException pushshout", "should not come here from updating location");
                 break;
@@ -364,7 +375,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
                 break;
             case AsyncTaskPayload.LOGIN:
                 payload.user = login(user.getNick(), user.getEmail(), user.getPassword());
-                Log.v("user login", user.getNick() + user.getEmail() + user.getPassword());
+                Log.v("login", user.getNick() + user.getEmail() + user.getPassword() + user.getAuthToken());
 
                 //           payload.user = login("uuu", "jorma@unfmail.com", "salasana");
 

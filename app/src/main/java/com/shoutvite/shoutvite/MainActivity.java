@@ -98,7 +98,7 @@ public class MainActivity extends FragmentActivity {
             Log.v("load", "success");
             fayeConnector.init(this);
         }else{
-            Log.v("load", "failure");
+            Log.v("load", "failureeeeee");
         }
         // set different sized tabs: tabHost.getTabWidget().getChildAt(0).getLayoutParams().height = 35; OR
         // tabHost.getTabWidget().getChildAt(0).setLayoutParams(new LinearLayout.LayoutParams(width,height));

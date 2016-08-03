@@ -71,11 +71,23 @@ public class ShoutListFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapter, View item, int position, long arg4){
                 Shout shout = main.shoutsAsShouts.get(position);
                 if(User.containsShoutID(main.user.getJoinedShouts(), shout)){
+
                     setCurrentShout(shout, false);
                     showGeneralView(false);
                 }else{
+                    if(main.user.isNullified()){
+                        main.changeTab(shout);
+                    }else {
+                        main.user.addJoinedShout(shout);
+                        setCurrentShout(shout, true);
+                        //main.fayeConnector.subscribeToChannel(shout.getChannel());
+                        main.joinedShoutAdapter.notifyDataSetChanged();
+                        showGeneralView(false);
+//                    main.changeTabToJoinedShout(shout);
+                    }
+
                     Log.v("shouttt", shout.getContent() + " " + shout.getId());
-                    main.changeTab(shout);
+//this is what it was                    main.changeTab(shout);
                 }
                 //currentShout = shout;
             }
