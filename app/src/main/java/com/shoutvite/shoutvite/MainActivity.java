@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TabHost;
@@ -36,13 +37,8 @@ import java.util.List;
 Issues:
 - Faye server only connects at startup: should probably try to reconnect on disconnect
 - Faye can't handle expired auth tokens -->  messages don't go through and no notification
-- pictures don't scale properly on multiple devices with different resolutions
 - wrong pictures in several places
-- asks for permission multiple times
-- doesn't handle negative permission result correctly
 - need notification if user creation fails
-- log out doesn't yet overwrite user file
-
 
 
  */
@@ -85,14 +81,18 @@ public class MainActivity extends FragmentActivity {
 
 
     public FayeConnector fayeConnector;
+    public MainActivity main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.splashScreenTheme);
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme);
   //      FacebookSdk.sdkInitialize(this);
         setContentView(R.layout.activity_main);
         fayeConnector = new FayeConnector();
         user.main = this;
+        main = this;
         backArrow = (ImageView)findViewById(R.id.back_arrow);
         if(loadUser(user)){
             Log.v("load", "success");
@@ -115,6 +115,7 @@ public class MainActivity extends FragmentActivity {
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
+                hideKeyboard(main);
                 lastTab = currentTab;
                 currentTab = tabHost.getCurrentTab();
                 tabQueue.add(lastTab);
@@ -251,13 +252,17 @@ public class MainActivity extends FragmentActivity {
         try {
             fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
             JSONObject userJSON = new JSONObject();
-            userJSON.put("username", userToSave.getNick());
+            String username = "";
+            if(userToSave.getNick() != null){
+                username = userToSave.getNick();
+            }
+            userJSON.put("username", username);
             userJSON.put("email", userToSave.getEmail());
             userJSON.put("auth_token", userToSave.getAuthToken());
             JSONArray channelsJSON = new JSONArray(channels);
             userJSON.put("channels", channelsJSON);
 
-            Log.v("userJSONnnnn: ", userJSON.toString());
+            Log.v("userJSONnnnnn: ", userJSON.toString());
             fos.write(userJSON.toString().getBytes());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -347,6 +352,17 @@ public class MainActivity extends FragmentActivity {
             joinedShoutAdapter.notifyDataSetChanged();
 
         }
+    }
+
+    public static void hideKeyboard(MainActivity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

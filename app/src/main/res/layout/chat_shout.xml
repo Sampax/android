@@ -4,15 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
     <TextView
         android:id="@+id/chat_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="left"
         android:textSize="20dp"
-        android:textStyle="bold"
         android:textAlignment="gravity"
         android:layout_gravity="left"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textColor="@color/otherUserTextColor"
+        android:background="@color/otherUserTextBackgroundColor"
         >
 
     </TextView>
@@ -24,10 +28,12 @@
         android:layout_height="match_parent"
         android:gravity="right"
         android:textAlignment="gravity"
-        android:textStyle="bold"
         android:textSize="20dp"
         android:layout_gravity="right"
-
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textColor="@color/userTextColor"
+        android:background="@color/userTextBackgroundColor"
         >
 
     </TextView>

@@ -3,4 +3,18 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+
+    <color name="userTextColor">#00B0E6</color> <!-- Shoutvite blue -->
+    <color name="shoutvite_blue">#00B0E6</color> <!-- Shoutvite blue -->
+    <color name="otherUserTextColor">#6C6C6C</color>    <!-- Shoutvite blue -->
+    <color name="userTextBackgroundColor">#4DFAF2F2</color> <!-- Shoutvite light red/gray -->
+    <color name="otherUserTextBackgroundColor">#4DE8EAEB</color>    <!-- Shoutvite light gray-->
+
+    <color name="textBlockColor">#4DE8EAEB</color>    <!-- Shoutvite light gray-->
+
+    <color name="shoutListColor">#A6E8EAEB</color>    <!-- Shoutvite light gray-->
+    <color name="white">#FFFFFF</color>    <!-- Shoutvite light gray-->
+    <color name="bue">#000000</color>    <!-- Shoutvite light gray-->
+
 </resources>

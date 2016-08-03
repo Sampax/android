@@ -8,7 +8,7 @@
         android:id="@+id/generalFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/backround1">
+        android:background="@drawable/shoutlistbackground">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,7 +20,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4.5"
+                android:layout_weight="4.4"
+                android:background="@drawable/round_shape_listview"
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:weightSum="10">
@@ -29,10 +30,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.5"
-                    android:background="@drawable/shout_text_background"
+                    android:background="@drawable/round_shape_textview"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
                     android:text="SHOUTS NEAR"
+                    android:textColor="@color/white"
 
                     />
 
@@ -41,14 +43,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="8.5"
-                    android:background="@drawable/list_background"
                     android:padding="10dp"></ListView>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4.5"
+                android:layout_weight="0.2">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4.4"
+                android:background="@drawable/round_shape_listview"
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:weightSum="10">
@@ -57,10 +66,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1.5"
-                    android:background="@drawable/shout_text_background"
+                    android:background="@drawable/round_shape_textview"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
                     android:text="MY LAST SHOUTS"
+                    android:textColor="@color/white"
 
                     />
 
@@ -69,17 +79,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="8.5"
-                    android:background="@drawable/list_background"
                     android:padding="10dp"></ListView>
             </LinearLayout>
 
-            <Button
-                android:id="@+id/launch_button"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="@string/shout_dialog" />
+                android:gravity="center"
+                android:layout_gravity="center">
 
+                <Button
+                    android:id="@+id/launch_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/shout_dialog" />
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 
@@ -99,8 +114,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="9"
-                android:background="@drawable/backround1">
+                android:layout_weight="8.5"
+                android:background="@drawable/chatbackground">
 
                 <ListView
                     android:id="@+id/chat_list"
@@ -113,8 +128,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:orientation="horizontal"
+                android:paddingBottom="10dp"
                 android:weightSum="10">
 
                 <EditText
@@ -122,15 +138,31 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="8"
-                    android:background="@drawable/blue_background"
+                    android:background="@drawable/chat_edittext_background"
+                    android:hint="Type here..."
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
                     android:text="" />
 
-                <Button
-                    android:id="@+id/chat_message_send_button"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
-                    android:text="Send" />
+                    android:paddingBottom="10dp"
+                    android:weightSum="10">
+
+                    <Button
+                        android:id="@+id/chat_message_send_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="8"
+                        android:gravity="center"
+                        android:paddingBottom="1dp"
+                        android:text="Send"
+                        android:textAlignment="gravity" />
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 

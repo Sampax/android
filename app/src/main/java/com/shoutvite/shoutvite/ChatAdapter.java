@@ -37,7 +37,13 @@ public class ChatAdapter<String> extends ArrayAdapter<String> {
 
     @Override
     public int getItemViewType(int position){
-        String str = data.get(position);
+        if(position % 2 == 0){
+            return 0;
+        }else{
+            return 1;       //TODO: REMOVE THIS!!!
+        }
+        //TODO: UNCOMMENT  THIS!!!
+/*        String str = data.get(position);
         Log.v("message is", str.toString());
         Log.v("letter is", "" + str.toString().charAt(str.toString().length() - 1));
         if(str.toString().charAt(str.toString().length() - 1) == 'u'){
@@ -47,7 +53,7 @@ public class ChatAdapter<String> extends ArrayAdapter<String> {
             return MESSAGE_FROM_ANOTHER;
         }
         Log.v("HolyShitWTFException", "WTF");
-        return 0;
+        return 0; */
     }
 
     public void addItem(String string){

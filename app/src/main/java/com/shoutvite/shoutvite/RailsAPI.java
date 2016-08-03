@@ -301,14 +301,18 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             String url = API_URL + "login";
             String response = POST(user, url);
             if(response == null){
+                Log.v("POST response", "is null");
                 return null;
             }
-//            Log.v("POST response", response);
+            Log.v("POST response", response);
             JSONObject JResponse = new JSONObject(response);
             Log.v("login response: ", JResponse.toString());
             String authToken = JResponse.getString("auth_token");
+            String username = JResponse.getString("username");
+            int user_id  = JResponse.getInt("user_id");
             Log.v("auth token", authToken);
-            User newUser = new User(email, name, authToken, null);
+            User newUser = new User(email, username, authToken, null);
+            newUser.setUser_id(user_id);
             return newUser;
         }catch(Exception e){
             Log.v("JSON", "JSON error" + e.toString());
@@ -322,7 +326,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     protected AsyncTaskPayload doInBackground(AsyncTaskPayload[] payloads) {
         AsyncTaskPayload payload = (AsyncTaskPayload)payloads[0];
         if(payload == null){
-            Log.v("aiempi fug", "fugfugg");
+            Log.v("aiempi fug", "fugfuggg");
         }
         User user = payload.user;
         Shout shout = payload.shout;

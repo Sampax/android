@@ -106,15 +106,20 @@ public class ProfileTabFragment extends Fragment {
         customLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.v("clickattu", "log out");
+                Log.v("clickattu", "log outtttt");
                 main.user.nullyfyUser(); //same as creating a new user with null values (still creates new joinedshoutlists)
                 hasUserUpdateUI(false);
+                main.createFile(main.user, null);
             }
         });
 
         if(!main.user.isNullified()) {
+            String username = "";
+            if(main.user.getNick() != null){
+                username = main.user.getNick();
+            }
             TextView textView = (TextView) view.findViewById(R.id.teksti);
-            textView.setText(main.user.getNick() + "\n" + main.user.getEmail());
+            textView.setText(username + "\n" + main.user.getEmail());
             createUserButton.setVisibility(View.GONE);
             customLoginButton.setVisibility(View.GONE);
             customLogoutButton.setVisibility(View.VISIBLE);
@@ -128,6 +133,9 @@ public class ProfileTabFragment extends Fragment {
         if(loggedIn) {
             if (main.user.getNick() != null) {
                 username = main.user.getNick();
+                if(username.equals("null")){
+                    username = "";
+                }
             }
             userText.setText(username + "\n" + main.user.getEmail());
             ((Button) getView().findViewById(R.id.username_launch_button)).setVisibility(View.GONE);

@@ -18,6 +18,7 @@ public class User {
     private String nick;
     private String authToken;
     private String password; //TODO: NOT the way to do this
+    private int user_id;
     private List<Shout> joinedShouts;
     private List<String> joinedShoutsAsStrings;
     private HashMap<String, FayeChannel> channelnamesToChannels;
@@ -142,6 +143,22 @@ public class User {
         return channelnamesToChannels;
     }
 
+    public static boolean containsShoutID(List<Shout> list, Shout shout){
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getId() == shout.getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
 }
 
 

@@ -61,6 +61,10 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     Map<Shout, Marker> shoutsHashMap;
     boolean cameFromShoutList = false;
     int scale = 100;
+    boolean permissionAnswer = false;
+    boolean firstmove = true;
+    float LOCATION_UPDATE_MIN_DIST = 25; //meters
+    int LOCATION_UPDATE_MIN_TIME = 45000; //milliseconds    //for networkprovider minimum is 45000 hardcoded in android, if less still counts ad 45 seconds
 
     @Override
     public void onCreate(Bundle savedStateInstance) {
@@ -68,16 +72,19 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         main = (MainActivity) getActivity();
         main.mapFrag = this;   //to get a handle for this fragment, holy shit the hardest thing ever
 //        ((MainActivity)getActivity()).mapFrag.updateShoutsOnMap(null);
-        Log.v("Here", "map");
-        main.changeTab(1);
         if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, MY_LOCATION_ACCESS);
         }
-
-        }
+        Log.v("Here", "mapppp");
+        main.changeTab(1);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedStateInstance) {
+     //   while (!permissionAnswer) {
+            //lol
+     //   }
+
         //need to get rid of the old view from the parent before inflating a new one
         if (view != null && this.previousContainer == container) {
             ViewGroup parent = (ViewGroup) view.getParent();
@@ -97,9 +104,15 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         main.getWindowManager().getDefaultDisplay().getMetrics(display);
         int screenWidth = display.widthPixels;
         int screenHeight = display.heightPixels;
-
-        bmap = Bitmap.createScaledBitmap(bmap, 100, 100, false);        //[TODO]should scale depending on screen size
-
+        Log.v("windowsize h", "" + screenHeight);
+        Log.v("windowsize w", "" + screenWidth);
+        //windowsize h: 1794
+        //windowsize w: 1080
+        double heightProportion = (double) screenHeight / 1794;
+        double widthProportion = (double) screenWidth / 1080;
+        int width = (int) Math.round(100 * widthProportion);
+        int height = (int) Math.round(100 * heightProportion);
+        bmap = Bitmap.createScaledBitmap(bmap, width, height, false);        //[TODO]should scale depending on screen size
         bitmap = BitmapDescriptorFactory.fromResource(R.drawable.logo);
         bitmap = BitmapDescriptorFactory.fromBitmap(bmap);
         //custom adapter to access textView because android is a piece of shit software that should be exterminated
@@ -183,7 +196,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
 
                 LatLng latlon = new LatLng(lat, lon);
                 CameraPosition pos = new CameraPosition(latlon, ZOOM_LEVEL, 0, 0);
-                map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+                if(firstmove) {
+                    map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+                }
                 Log.v("location update", "updated location 2");
                 AsyncTaskPayload payload = AsyncTaskPayload.getShoutsPayload(lat, lon, DISTANCE_THRESHOLD);
                 new RailsAPI(main).execute(payload);
@@ -230,8 +245,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             Log.v("missing", "yes it is");
             return null;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, listener);     //  test:  String provider = locationManager.getProviders(true).get(0);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, listener);     //  test:  String provider = locationManager.getProviders(true).get(0);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DIST, listener);     //  test:  String provider = locationManager.getProviders(true).get(0);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, LOCATION_UPDATE_MIN_TIME, LOCATION_UPDATE_MIN_DIST, listener);     //  test:  String provider = locationManager.getProviders(true).get(0);
         //get all providers to find one that works... I'm sure this is very unefficient
         boolean print = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         if (print) {
@@ -288,7 +303,11 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
             Shout aux = shoutList.get(i);
             Log.v("Bug content all: ", aux.getContent());
             Log.v("Bug channel all: ", aux.getChannel());
-            Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap).title(aux.getContent()).snippet("Click to join"));
+            String clickText = "Click to join";
+            if (User.containsShoutID(main.user.getJoinedShouts(), aux)) {
+                clickText = "";
+            }
+            Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap).title(aux.getContent()).snippet(clickText));
             markersHashMap.put(newMarker, aux);
             shoutsHashMap.put(aux, newMarker);
             main.shouts.add(aux.getContent());
@@ -298,9 +317,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                     if (main.user.isNullified()) {
                         main.changeTabToProfileAndLaunchLogin();
                     } else {
-
+                        marker.setSnippet("");
                         Shout shout = markersHashMap.get(marker);
-                        if (!main.user.getJoinedShouts().contains(shout)) {
+                        if (!User.containsShoutID(main.user.getJoinedShouts(), shout)) {
                             main.user.addJoinedShout(shout);
                             Log.v("Bug content: ", shout.getContent());
                             Log.v("Bug channel: ", shout.getChannel());
@@ -309,8 +328,11 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                             main.shoutFrag.currentShout = shout;
                             main.joinedShoutAdapter.notifyDataSetChanged();
                             main.changeTabToJoinedShout(shout);
+                        } else {
+                            main.shoutFrag.currentShout = shout;
+                            main.changeTabToJoinedShout(shout);
                         }
-                        Log.v("info window", "clicked " + shout.getContent());
+                        Log.v("info window", "clickeed " + shout.getContent());
                     }
                 }
             });
@@ -347,10 +369,14 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                             Log.v("permission error", "no permission yet"); //should never occur
                         }
                     }
-                }else{
+//                    LatLng initLocation = getInitialLocation();
+//                    CameraPosition pos = new CameraPosition(initLocation, ZOOM_LEVEL, 0, 0);
+//                    map.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+
+                } else {
                     main.launchNotification(NotificationDialogFragment.PERMISSION_DENIED);
                 }
-
+                permissionAnswer = true;
                 break;
             default:
                 Log.d("loc wtfException", "different permission");
@@ -379,7 +405,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         main.shoutsAsShouts.add(shout);
         main.shoutFrag.currentShout = shout;
         main.shoutAdapter.notifyDataSetChanged();
-        Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(shout.getLat(), shout.getLon())).icon(bitmap).title(shout.getContent()).snippet("Click to join"));
+        Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(shout.getLat(), shout.getLon())).icon(bitmap).title(shout.getContent()).snippet(""));
         shoutsHashMap.put(shout, newMarker);
         markersHashMap.put(newMarker, shout);
 

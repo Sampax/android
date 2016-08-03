@@ -70,10 +70,14 @@ public class ShoutListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapter, View item, int position, long arg4){
                 Shout shout = main.shoutsAsShouts.get(position);
+                if(User.containsShoutID(main.user.getJoinedShouts(), shout)){
+                    setCurrentShout(shout, false);
+                    showGeneralView(false);
+                }else{
+                    Log.v("shouttt", shout.getContent() + " " + shout.getId());
+                    main.changeTab(shout);
+                }
                 //currentShout = shout;
-                Log.v("shouttt", shout.getContent() + " " + shout.getId());
-                main.changeTab(shout);
-
             }
         });
         final ListView joinedListView = (ListView)view.findViewById(R.id.user_shout_list);
@@ -87,8 +91,11 @@ public class ShoutListFragment extends Fragment {
             @Override
             public void onClick(View view) {        //should set a new one each time currentShout changes
                 if(!main.user.isNullified()) {
-                    view = (View)view.getParent();
+                    view = (View)view.getParent().getParent();
                     EditText composedMessage = (EditText)view.findViewById(R.id.chat_message_send);
+                    if(composedMessage == null){
+                        Log.v("Edit text", "on null, fug");
+                    }
                     String username = "";
                     if(main.user.getNick() != null){
                         username = main.user.getNick();
@@ -96,6 +103,8 @@ public class ShoutListFragment extends Fragment {
                     Log.v("shout channel", currentShout.getChannel());
                     // main.fayeConnector.subscribeToChannel("/testi");
                     main.fayeConnector.publishToChannel(currentShout.getChannel(), composedMessage.getText().toString(), username);
+                    composedMessage.setText("");
+                    main.hideKeyboard(main);
                 }
             }
         });
@@ -143,7 +152,7 @@ public class ShoutListFragment extends Fragment {
 
             }
         });
-        Log.v("should only come here", "at the start");
+        Log.v("should only come here", "at the startt");
         return view;
     }
 
@@ -192,6 +201,20 @@ public class ShoutListFragment extends Fragment {
         }
         main.chatAdapter.notifyDataSetChanged();
 
+    }
+
+    public void showGeneralView(boolean show){
+        if(show){
+            shoutFrame.setVisibility(View.GONE);
+            generalFrame.setVisibility(View.VISIBLE);
+            main.backArrow.setVisibility(View.GONE);
+
+        }else{
+            shoutFrame.setVisibility(View.VISIBLE);
+            generalFrame.setVisibility(View.GONE);
+            main.backArrow.setVisibility(View.VISIBLE);
+
+        }
     }
 
 
