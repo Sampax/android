@@ -15,6 +15,7 @@
         android:textAlignment="gravity"
         android:textColor="@color/userTextColor"
         android:textSize="20dp"
+        android:autoLink="web"
         />
 
     <TextView
@@ -28,6 +29,7 @@
         android:textAlignment="gravity"
         android:textColor="@color/otherUserTextColor"
         android:textSize="20dp"
+        android:autoLink="web"
 
         />
 

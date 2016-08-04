@@ -92,6 +92,10 @@ public class FayeConnector{  //this or asynctask necessary?
 
     }
 
+    public void unsubscribeAllChannels(){
+        client.unsubscribeAll();
+    }
+
     public void subscribeToChannel(String channelname){
         Log.v("subscribed to: ", channelname);
         if(client.isConnectedServer()){
@@ -125,7 +129,11 @@ public class FayeConnector{  //this or asynctask necessary?
 
                     @Override
                     public void run() {
-                        main.chatAdapter.notifyDataSetChanged();
+                        try {
+                            main.chatAdapter.notifyDataSetChanged();
+                        }catch(IllegalStateException e){
+                            Log.v("voimuna", "Illegal exception");
+                        }
                     }
                 });
             }

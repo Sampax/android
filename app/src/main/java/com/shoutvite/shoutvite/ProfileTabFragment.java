@@ -110,6 +110,7 @@ public class ProfileTabFragment extends Fragment {
                 main.user.nullyfyUser(); //same as creating a new user with null values (still creates new joinedshoutlists)
                 hasUserUpdateUI(false);
                 main.createFile(main.user, null);
+                main.fayeConnector.unsubscribeAllChannels();
             }
         });
 

@@ -215,6 +215,8 @@ public class ShoutListFragment extends Fragment {
 
     }
 
+
+
     public void showGeneralView(boolean show){
         if(show){
             shoutFrame.setVisibility(View.GONE);

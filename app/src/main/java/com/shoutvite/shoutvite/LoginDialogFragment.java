@@ -15,7 +15,7 @@ public class LoginDialogFragment extends DialogFragment {
     MainActivity main;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedStateInstance) {
+    public Dialog onCreateDialog(Bundle savedStateInstance)  {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.login_layout, null));
