@@ -21,7 +21,7 @@ public class FayeConnector{  //this or asynctask necessary?
     MetaMessage metaMessage;
     FayeClient client;
     String fayeURL_DEV = "ws://52.178.223.135/shout/";
-    String fayeURL_launch = "ws://52.164.249.127/shout/";
+    String fayeURL_launch = "wss://socket.shoutvite.me/shout/"; //"ws://52.164.249.127/shout/";
     String fayeURL = fayeURL_launch;
     String toimiva_testi_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMiwiY2hhbm5lbCI6Ii9rYW5hdmEiLCJleHAiOjE0NzIxNjY1MDZ9.LsgMajIckfQ6vNvFT71Fwwv4MulMdh1gD8p7lHfmUqY";
 
@@ -41,7 +41,7 @@ public class FayeConnector{  //this or asynctask necessary?
         client.setListener(new FayeClientListener() {
             @Override
             public void onConnectedServer(FayeClient fc) {
-                Log.v("Faye", "connected nowwwwww");
+                Log.v("Faye", "connected nowwwwwwwwwwwwww");
 //                client.subscribeChannel("/testi");
 //                client.publish("/testi", "jee");
                 //user, channel, message

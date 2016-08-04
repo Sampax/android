@@ -31,9 +31,10 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     WeakReference<MainActivity> mainRef;    //to access UI from this non-UI thread
 //    String API_URL = "http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
     String API_URL_dev = "http://api.shoutvite.com/v1/";
-    String API_URL_launch = "http://api.shoutvite.me/v1/";
+    String API_URL_launch = "https://api.shoutvite.me/v1/";    //"http://api.shoutvite.me/v1/";
     String API_URL = API_URL_launch;//"http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
-
+//    https://api.shoutvite.me/v1
+//    https://socket.shoutvite.me
 
     public RailsAPI(MainActivity main){
         mainRef = new WeakReference<MainActivity>(main);
@@ -54,7 +55,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
 
     public String POST(JSONObject json, String APIURL) {
         Log.v("saatana", json.toString());
-
+        Log.v("saatana", APIURL);
         HttpURLConnection connection = null;
         try {
             URL url = new URL(APIURL);
@@ -108,6 +109,9 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
     }
 
     public String POST(JSONObject json, String APIURL, String authToken) {
+        Log.v("saatana", json.toString());
+        Log.v("saatana", APIURL);
+
         HttpURLConnection connection = null;
         try {
             Log.v("saatana", json.toString());
@@ -155,7 +159,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             if(connection != null){
                 connection.disconnect();
             }else{
-                Log.v("POST connection", "already closed");
+                Log.v("POST connection", "already closeddd");
             }
         }
 
