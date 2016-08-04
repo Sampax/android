@@ -152,6 +152,16 @@ public class User {
         return false;
     }
 
+    public static Shout getShoutByID(List<Shout> list, int shoutId){
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getId() == shoutId){
+                return list.get(i);
+            }
+        }
+        return null;
+    }
+
+
     public int getUser_id() {
         return user_id;
     }

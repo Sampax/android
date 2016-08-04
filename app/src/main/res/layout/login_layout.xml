@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <EditText
         android:id="@+id/login_email"
@@ -11,8 +12,10 @@
         android:inputType="textMultiLine"
         android:gravity="top|left"
         android:lines="1"
-        android:background="@drawable/list_background"
+        android:background="@drawable/alert_dialog_shape"
         android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:paddingBottom="20dp"
         />
 
     <EditText
@@ -22,9 +25,12 @@
         android:hint="type password"
         android:gravity="top|left"
         android:lines="1"
-        android:background="@drawable/list_background"
+        android:background="@drawable/alert_dialog_shape"
         android:inputType="textPassword"
         android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:paddingBottom="20dp"
+
         />
 
 </LinearLayout>

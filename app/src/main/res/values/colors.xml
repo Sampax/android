@@ -17,4 +17,7 @@
     <color name="white">#FFFFFF</color>    <!-- Shoutvite light gray-->
     <color name="bue">#000000</color>    <!-- Shoutvite light gray-->
 
+
+    <color name="alertdialog_box_color">#4DFAF2F2</color>    <!-- Shoutvite light gray-->
+
 </resources>

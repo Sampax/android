@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     android:textSize="16dp"
     android:paddingBottom="5dp"
+    android:maxLines="1"
+    android:ellipsize="end"
     >
 
 

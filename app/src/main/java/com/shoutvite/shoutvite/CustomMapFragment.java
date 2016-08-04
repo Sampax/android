@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,10 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,7 +32,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,8 +49,10 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     GoogleMap map = null;
     int DISTANCE_THRESHOLD = 500;
     int ZOOM_LEVEL = 15;
-    BitmapDescriptor bitmap = null;
-    Bitmap bmap = null;
+    BitmapDescriptor bitmap_sos = null;
+    BitmapDescriptor bitmap_sv = null;
+    Bitmap bmap_sos = null;
+    Bitmap bmap_sv = null;
     MainActivity main;
     Map<Marker, Shout> markersHashMap;
     Map<Shout, Marker> shoutsHashMap;
@@ -65,6 +62,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
     boolean firstmove = true;
     float LOCATION_UPDATE_MIN_DIST = 25; //meters
     int LOCATION_UPDATE_MIN_TIME = 45000; //milliseconds    //for networkprovider minimum is 45000 hardcoded in android, if less still counts ad 45 seconds
+
+    int SOS_SHOUT_ID = 12;
+
 
     @Override
     public void onCreate(Bundle savedStateInstance) {
@@ -100,7 +100,8 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                 .findFragmentById(R.id.gmap);
         mapFragment.getMapAsync(this);
         //bmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
-        bmap = BitmapFactory.decodeResource(getResources(), R.drawable.sos);
+        bmap_sos = BitmapFactory.decodeResource(getResources(), R.drawable.sos);
+        bmap_sv = BitmapFactory.decodeResource(getResources(), R.drawable.logo);
         DisplayMetrics display = new DisplayMetrics();
         main.getWindowManager().getDefaultDisplay().getMetrics(display);
         int screenWidth = display.widthPixels;
@@ -113,9 +114,11 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         double widthProportion = (double) screenWidth / 1080;
         int width = (int) Math.round(scale * widthProportion);
         int height = (int) Math.round(scale * heightProportion);
-        bmap = Bitmap.createScaledBitmap(bmap, width, height, false);        //[TODO]should scale depending on screen size
-        bitmap = BitmapDescriptorFactory.fromResource(R.drawable.logo);
-        bitmap = BitmapDescriptorFactory.fromBitmap(bmap);
+        bmap_sos = Bitmap.createScaledBitmap(bmap_sos, width, height, false);        //[TODO]should scale depending on screen size
+        bmap_sv = Bitmap.createScaledBitmap(bmap_sv, width, height, false);        //[TODO]should scale depending on screen size
+  //      bitmap = BitmapDescriptorFactory.fromResource(R.drawable.logo);
+        bitmap_sos = BitmapDescriptorFactory.fromBitmap(bmap_sos);
+        bitmap_sv = BitmapDescriptorFactory.fromBitmap(bmap_sv);
         //custom adapter to access textView because android is a piece of shit software that should be exterminated
         FrameLayout frame1 = (FrameLayout) view.findViewById(R.id.frame1);
         FrameLayout frame2 = (FrameLayout) view.findViewById(R.id.frame2);
@@ -300,15 +303,26 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         markersHashMap = new HashMap<Marker, Shout>();
         shoutsHashMap = new HashMap<Shout, Marker>();
         main.shoutsAsShouts = shoutList;
+        Shout sos_Shout = User.getShoutByID(shoutList, SOS_SHOUT_ID);
+        if(sos_Shout != null){
+            shoutList.remove(sos_Shout);
+        }
+        shoutList.add(sos_Shout); //should add it as the last one
         for (int i = 0; i < shoutList.size(); i++) {
             Shout aux = shoutList.get(i);
             Log.v("Bug content all: ", aux.getContent());
+            Log.v("Bug content all: ", "" + aux.getId());
             Log.v("Bug channel all: ", aux.getChannel());
             String clickText = "Click to join";
             if (User.containsShoutID(main.user.getJoinedShouts(), aux)) {
                 clickText = "";
             }
-            Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap).title(aux.getContent()).snippet(clickText));
+            Marker newMarker = null;
+            if(aux.getId() != SOS_SHOUT_ID) {
+                newMarker = map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap_sv).title(aux.getContent()).snippet(clickText));
+            }else{
+                newMarker = map.addMarker(new MarkerOptions().position(new LatLng(aux.getLat(), aux.getLon())).icon(bitmap_sos).title(aux.getContent()).snippet(clickText));
+            }
             markersHashMap.put(newMarker, aux);
             shoutsHashMap.put(aux, newMarker);
             main.shouts.add(aux.getContent());
@@ -333,7 +347,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
                             main.shoutFrag.currentShout = shout;
                             main.changeTabToJoinedShout(shout);
                         }
-                        Log.v("info window", "clickeed " + shout.getContent());
+                        Log.v("info window", "clickeeed " + shout.getContent());
                     }
                 }
             });
@@ -406,7 +420,7 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         main.shoutsAsShouts.add(shout);
         main.shoutFrag.currentShout = shout;
         main.shoutAdapter.notifyDataSetChanged();
-        Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(shout.getLat(), shout.getLon())).icon(bitmap).title(shout.getContent()).snippet(""));
+        Marker newMarker = map.addMarker(new MarkerOptions().position(new LatLng(shout.getLat(), shout.getLon())).icon(bitmap_sv).title(shout.getContent()).snippet(""));
         shoutsHashMap.put(shout, newMarker);
         markersHashMap.put(newMarker, shout);
 

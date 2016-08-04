@@ -5,35 +5,44 @@
 
     <EditText
         android:id="@+id/newuser"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="type username"
         android:inputType="textMultiLine"
         android:gravity="top|left"
         android:lines="1"
-        android:background="@android:color/transparent"
+        android:background="@drawable/alert_dialog_shape"
+        android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:paddingBottom="20dp"
 
         />
 
     <EditText
         android:id="@+id/email"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="type email"
         android:gravity="top|left"
         android:lines="1"
-        android:background="@android:color/transparent"
+        android:background="@drawable/alert_dialog_shape"
+        android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:paddingBottom="20dp"
         />
 
 
     <EditText
         android:id="@+id/password"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="type password"
         android:gravity="top|left"
         android:lines="1"
-        android:background="@android:color/transparent"
+        android:background="@drawable/alert_dialog_shape"
+        android:paddingLeft="10dp"
+        android:textSize="32sp"
+        android:paddingBottom="20dp"
         android:inputType="textPassword"
         />
 
