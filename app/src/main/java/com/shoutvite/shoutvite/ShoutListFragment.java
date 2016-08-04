@@ -183,9 +183,9 @@ public class ShoutListFragment extends Fragment {
         if(currentShout.getChannel().equals(channel)){
             Log.v("what", "the hell?");
             if(user.equals(main.user.getNick())) {
-                main.chatMessages.add(user + " says: \n" + message + "u");
+                main.chatMessages.add(user + ":  \n" + message + "u");
             }else{
-                main.chatMessages.add(user + " says: \n" + message + "n");
+                main.chatMessages.add(user + ":  \n" + message + "n");
             }
             //main.chatAdapter.notifyDataSetChanged();
             main.fayeConnector.doShit();
@@ -202,9 +202,9 @@ public class ShoutListFragment extends Fragment {
                 FayeChannel channel = main.user.getChannelnamesToChannels().get(shout.getChannel());
                 for(int i = 0; i < channel.messages.size(); i++){
                     if(channel.messages.get(i).user.equals(main.user.getNick())) {
-                        main.chatMessages.add(channel.messages.get(i).user + " says: \n" + channel.messages.get(i).message + "u");
+                        main.chatMessages.add(channel.messages.get(i).user + ":  \n" + channel.messages.get(i).message + "u");
                     }else{
-                        main.chatMessages.add(channel.messages.get(i).user + " says: \n" + channel.messages.get(i).message + "n");
+                        main.chatMessages.add(channel.messages.get(i).user + ":  \n" + channel.messages.get(i).message + "n");
                     }
                 }
             }else{

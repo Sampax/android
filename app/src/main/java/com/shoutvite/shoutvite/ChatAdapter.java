@@ -37,13 +37,13 @@ public class ChatAdapter<String> extends ArrayAdapter<String> {
 
     @Override
     public int getItemViewType(int position){
-        if(position % 2 == 0){
+ /*       if(position % 2 == 0){
             return 0;
         }else{
             return 1;       //TODO: REMOVE THIS!!!
-        }
+        }  */
         //TODO: UNCOMMENT  THIS!!!
-/*        String str = data.get(position);
+        String str = data.get(position);
         Log.v("message is", str.toString());
         Log.v("letter is", "" + str.toString().charAt(str.toString().length() - 1));
         if(str.toString().charAt(str.toString().length() - 1) == 'u'){
@@ -53,7 +53,7 @@ public class ChatAdapter<String> extends ArrayAdapter<String> {
             return MESSAGE_FROM_ANOTHER;
         }
         Log.v("HolyShitWTFException", "WTF");
-        return 0; */
+        return 0;
     }
 
     public void addItem(String string){
@@ -84,8 +84,10 @@ public class ChatAdapter<String> extends ArrayAdapter<String> {
             view = inflater.inflate(R.layout.chat_shout, null);
             if(this.getItemViewType(i) == MESSAGE_FROM_ANOTHER) {
                 holder.text = (TextView) view.findViewById(R.id.chat_text);
+                holder.text.setBackgroundResource(R.drawable.round_shape_listview);
             }else if (this.getItemViewType(i) == OWN_MESSAGE){
                 holder.text = (TextView) view.findViewById(R.id.chat_text_own);
+                holder.text.setBackgroundResource(R.drawable.round_shape_chat_listview_own);
             }
             view.setTag(holder);
         }else{
