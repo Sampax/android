@@ -101,7 +101,7 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             if(connection != null){
                 connection.disconnect();
             }else{
-                Log.v("POST connection", "already closed");
+                Log.v("POST connection", "already closeddd");
             }
         }
 
