@@ -306,8 +306,9 @@ public class CustomMapFragment extends Fragment implements OnMapReadyCallback {
         Shout sos_Shout = User.getShoutByID(shoutList, SOS_SHOUT_ID);
         if(sos_Shout != null){
             shoutList.remove(sos_Shout);
+            shoutList.add(sos_Shout); //should add it as the last one
+
         }
-        shoutList.add(sos_Shout); //should add it as the last one
         for (int i = 0; i < shoutList.size(); i++) {
             Shout aux = shoutList.get(i);
             Log.v("Bug content all: ", aux.getContent());

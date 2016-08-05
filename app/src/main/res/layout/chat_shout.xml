@@ -13,7 +13,8 @@
         android:paddingRight="10dp"
         android:gravity="right"
         android:textAlignment="gravity"
-        android:textColor="@color/userTextColor"
+        android:textColor="@color/otherUserTextColor"
+
         android:textSize="20dp"
         android:autoLink="web"
         />
@@ -27,7 +28,7 @@
         android:paddingRight="10dp"
         android:gravity="left"
         android:textAlignment="gravity"
-        android:textColor="@color/otherUserTextColor"
+        android:textColor="@color/userTextColor"
         android:textSize="20dp"
         android:autoLink="web"
 

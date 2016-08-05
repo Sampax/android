@@ -182,13 +182,15 @@ public class ShoutListFragment extends Fragment {
         Log.v("message channel: ", channel);
         if(currentShout.getChannel().equals(channel)){
             Log.v("what", "the hell?");
+
             if(user.equals(main.user.getNick())) {
                 main.chatMessages.add(user + ":  \n" + message + "u");
             }else{
                 main.chatMessages.add(user + ":  \n" + message + "n");
             }
             //main.chatAdapter.notifyDataSetChanged();
-            main.fayeConnector.doShit();
+            //main.fayeConnector.doShit();
+            main.doShit();
         }
     }
 

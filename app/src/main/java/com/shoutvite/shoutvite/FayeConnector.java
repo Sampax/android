@@ -107,7 +107,7 @@ public class FayeConnector{  //this or asynctask necessary?
 
     public void publishToChannel(String channel, String message, String user){
         Log.v("publishing to: ", channel);
-        if(client.isConnectedServer()){
+        if(client.isConnectedServer() & !message.equals("")){
             this.subscribeToChannel(channel);
             JSONObject JSONMessage = new JSONObject();
             try {

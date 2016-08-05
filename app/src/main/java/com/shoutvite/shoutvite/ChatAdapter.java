@@ -84,12 +84,11 @@ public class ChatAdapter<String> extends ArrayAdapter<String> {
             view = inflater.inflate(R.layout.chat_shout, null);
             if(this.getItemViewType(i) == MESSAGE_FROM_ANOTHER) {
                 holder.text = (TextView) view.findViewById(R.id.chat_text);
-                holder.text.setBackgroundResource(R.drawable.round_shape_chat_listview_own);
                 holder.text.setBackgroundResource(R.drawable.round_shape_chat_listview_other);
                 Log.v("oma", "other");
             }else if (this.getItemViewType(i) == OWN_MESSAGE){
                 holder.text = (TextView) view.findViewById(R.id.chat_text_own);
-                holder.text.setBackgroundResource(R.drawable.round_shape_chat_listview_other);
+                holder.text.setBackgroundResource(R.drawable.round_shape_chat_listview_own);
                 Log.v("oma", "oikeasti oma");
             }
             view.setTag(holder);

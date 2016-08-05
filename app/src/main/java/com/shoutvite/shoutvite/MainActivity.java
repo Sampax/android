@@ -365,6 +365,24 @@ public class MainActivity extends FragmentActivity {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public void doShit(){
+        new Thread(){
+            public void run(){
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            chatAdapter.notifyDataSetChanged();
+                        }catch(IllegalStateException e){
+                            Log.v("voimuna", "Illegal exception");
+                        }
+                    }
+                });
+            }
+        }.start();
+    }
+
 }
 
 
