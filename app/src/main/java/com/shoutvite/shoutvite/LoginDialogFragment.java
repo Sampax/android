@@ -42,6 +42,21 @@ public class LoginDialogFragment extends DialogFragment {
                 dialog.dismiss();
             }
         });
+        builder.setNeutralButton("New user", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MainActivity main = (MainActivity) getActivity();
+                EditText userText = (EditText) ((AlertDialog) dialog).findViewById(R.id.login_email);
+                String username = userText.getText().toString();
+                userText = (EditText) ((AlertDialog) dialog).findViewById(R.id.login_password);
+                String password = userText.getText().toString();
+                CreateUserDialogFragment newUserDialog = new CreateUserDialogFragment();
+                newUserDialog.show(getActivity().getSupportFragmentManager(), "username dialog");
+
+            }
+        });
+
+
         return builder.create();
     }
 }
