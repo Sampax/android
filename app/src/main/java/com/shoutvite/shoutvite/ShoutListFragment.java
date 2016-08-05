@@ -114,7 +114,7 @@ public class ShoutListFragment extends Fragment {
                     }
                     Log.v("shout channel", currentShout.getChannel());
                     // main.fayeConnector.subscribeToChannel("/testi");
-                    main.fayeConnector.publishToChannel(currentShout.getChannel(), composedMessage.getText().toString(), username);
+                    main.fayeConnector.publishToChannel(currentShout.getChannel(), composedMessage.getText().toString(), username, main);
                     composedMessage.setText("");
                     main.hideKeyboard(main);
                 }

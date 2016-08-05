@@ -105,7 +105,7 @@ public class FayeConnector{  //this or asynctask necessary?
         }
     }
 
-    public void publishToChannel(String channel, String message, String user){
+    public void publishToChannel(String channel, String message, String user, MainActivity main){
         Log.v("publishing to: ", channel);
         if(client.isConnectedServer() & !message.equals("")){
             this.subscribeToChannel(channel);
@@ -119,6 +119,21 @@ public class FayeConnector{  //this or asynctask necessary?
             }
             //client.publish(channel, JSONMessage.toString());
             client.publish(channel, JSONMessage.toString());
+        }else{
+            this.init(main);    //try to reconnect once, then the same if already connected
+            if(client.isConnectedServer() & !message.equals("")) {
+                this.subscribeToChannel(channel);
+                JSONObject JSONMessage = new JSONObject();
+                try {
+                    JSONMessage.put("channel", channel);
+                    JSONMessage.put("message", message);
+                    JSONMessage.put("user", user);
+                } catch (JSONException e) {
+                    Log.v("Faye publish ", e.toString());
+                }
+                //client.publish(channel, JSONMessage.toString());
+                client.publish(channel, JSONMessage.toString());
+            }
         }
     }
 
