@@ -26,7 +26,16 @@ import java.util.List;
  * Created by Jonatan on 13.7.2016.
  */
 public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload>{
+//muutokset:
+    //
 
+    /*
+    - shoutin luontiin käyttäjänimi owner_name ja moderater_name:na x
+    - sama päivitykseen (mahdollista lisätä)
+    - päivitykseen mahdollista lisätä ikoni
+    - käyttäjän ikoni
+
+     */
 
     WeakReference<MainActivity> mainRef;    //to access UI from this non-UI thread
 //    String API_URL = "http://10.0.2.2:80/v1/";  // "http://api.shoutvite.dev/v1/";
@@ -219,7 +228,8 @@ public class RailsAPI extends AsyncTask<AsyncTaskPayload, Void, AsyncTaskPayload
             query.put("name", shout.getContent());
             query.put("lat", lat);
             query.put("lon", lon);
-            query.put("creator", shout.getOwner());
+            query.put("moderator_name", shout.getOwner());
+            query.put("owner_name", shout.getOwner());
             String url = API_URL + "shouts";
             String response = POST(query, url, user.getAuthToken());
             JSONObject responseJSON = new JSONObject(response);
